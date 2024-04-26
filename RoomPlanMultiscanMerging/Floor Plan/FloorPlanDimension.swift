@@ -15,6 +15,9 @@ class FloorPlanDimension: SKNode {
     private var _halfLength: CGFloat {
         return CGFloat(self._dimensions.x) * FloorPlanPreference.shared.scalingFactor / 2
     }
+    var scaledHalfLength: CGFloat {
+        self._halfLength
+    }
     
     private var _startPoint: CGPoint {
         return CGPoint(x: -self._halfLength, y: 0)

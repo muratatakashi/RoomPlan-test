@@ -23,7 +23,7 @@ final class SurfaceDimensions {
 
             var position = CGPoint(x: 0, y: 0)
             
-            let offset = CGFloat(100 * step)
+            let offset = CGFloat(50 * step)
 
             switch self {
             case .top:
@@ -44,11 +44,119 @@ final class SurfaceDimensions {
         }
     }
     
-    struct DimensionProperty {
+    class DimensionProperty {
         let position: Position
         let surface: FloorPlanSurface
         let dimension: FloorPlanDimension
-        let step: Int
+        var step: Int
+        var visible: Bool = true
+        
+        var index: Int? = nil
+        
+        init(position: Position, surface: FloorPlanSurface, dimension: FloorPlanDimension, step: Int, visible: Bool) {
+            self.position = position
+            self.surface = surface
+            self.dimension = dimension
+            self.step = step
+            self.visible = visible
+        }
+        
+        func dimensionRange(
+            scene: SKScene,
+            root: SKNode
+        ) -> [CGPoint] {
+            let p = root.convert(
+                self.surface.convert(self.dimension.position, to: root),
+                to: scene
+            )
+            
+            switch position {
+            case .top, .bottom:
+                return [
+                    CGPoint(x: p.x - self.dimension.scaledHalfLength, y: 0),
+                    CGPoint(x: p.x + self.dimension.scaledHalfLength, y: 0),
+                ]
+            case .left, .right:
+                return [
+                    CGPoint(x: 0, y: p.y - self.dimension.scaledHalfLength),
+                    CGPoint(x: 0, y: p.y + self.dimension.scaledHalfLength),
+                ]
+            }
+        }
+        
+        func contains(
+            scene: SKScene,
+            root: SKNode,
+            props: DimensionProperty
+        ) -> Bool {
+            let range0 = self.dimensionRange(scene: scene, root: root)
+            let range1 = props.dimensionRange(scene: scene, root: root)
+            
+            guard self.position == props.position else {
+                return false
+            }
+            
+            return switch self.position {
+            case .top, .bottom:
+                range0[0].x <= range1[0].x && range1[1].x <= range0[1].x
+            case .left, .right:
+                range0[0].y <= range1[0].y && range1[1].y <= range0[1].y
+            }
+        }
+        
+        func overlap(
+            scene: SKScene,
+            root: SKNode,
+            props: DimensionProperty
+        ) -> Bool {
+            let range0 = self.dimensionRange(scene: scene, root: root)
+            let range1 = props.dimensionRange(scene: scene, root: root)
+            
+            guard self.position == props.position else {
+                return false
+            }
+
+            return switch self.position {
+            case .top, .bottom:
+                range0[0].x <= range1[0].x && range1[0].x <= range0[1].x
+                || range0[0].x <= range1[1].x && range1[1].x <= range0[1].x
+//                let center0 = (range0[0].x + range0[1].x) / 2
+//                let center1 = (range1[0].x + range1[1].x) / 2
+//                let length = abs(center0 - center1)
+//                return Float(length) < (self.dimension.length + props.dimension.length) / 2
+            case .left, .right:
+                range0[0].y <= range1[0].y && range1[0].y <= range0[1].y
+                || range0[0].y <= range1[1].y && range1[1].y <= range0[1].y
+//                let center0 = (range0[0].y + range0[1].y) / 2
+//                let center1 = (range1[0].y + range1[1].y) / 2
+//                let length = abs(center0 - center1)
+//                return Float(length) < (self.dimension.length + props.dimension.length) / 2
+            }
+        }
+        
+        func equal(
+            scene: SKScene,
+            root: SKNode,
+            props: DimensionProperty
+        ) -> Bool {
+            let range0 = self.dimensionRange(scene: scene, root: root)
+            let range1 = props.dimensionRange(scene: scene, root: root)
+            
+            guard self.position == props.position else {
+                return false
+            }
+            guard Int(self.dimension.length * 10) == Int(props.dimension.length * 10) else {
+                return false
+            }
+            
+            // cm単位で比較
+            return switch self.position {
+            case .top, .bottom:
+                Int(range0[0].x * 10) == Int(range1[0].x * 10) && Int(range0[1].x * 10) == Int(range1[1].x * 10)
+            case .left, .right:
+                Int(range0[0].y * 10) == Int(range1[0].y * 10) && Int(range0[1].y * 10) == Int(range1[1].y * 10)
+            }
+        }
     }
     
     weak private(set) var scene: SKScene!
@@ -147,15 +255,17 @@ final class SurfaceDimensions {
                 label.fontSize = FloorPlanPreference.shared.fontSize
                 dimension.addChild(label)
                 
-                index += 1
-                
                 let property = DimensionProperty(
                     position: position,
                     surface: surface,
                     dimension: dimension,
-                    step: 0
+                    step: 0,
+                    visible: true
                 )
-                
+                property.index = index
+
+                index += 1
+
                 self.dimensions[position]?.append(property)
             }
         }
@@ -171,28 +281,61 @@ final class SurfaceDimensions {
         self.dimensions[.left]?.sort(by: {$0.dimension.length < $1.dimension.length})
         self.dimensions[.right]?.sort(by: {$0.dimension.length < $1.dimension.length})
         
-        self.dimensions[.left]?.forEach {
-            let p0 = $0.dimension.position
-            print(p0)
-            let p1 = $0.surface.convert(p0, to: self.root)
-            print(p1)
-            let p2 = self.root.convert(p1, to: self.scene)
-            print(p2)
+        self.dimensions.forEach { _, properties in
+            self.setupDimensionSteps(to: properties)
         }
     }
     
     private func setupDimensionSteps(to props: [DimensionProperty]) {
+        var step: Int = 0
+        props.forEach {
+            if $0.position == .left {
+                let range = $0.dimensionRange(scene: self.scene, root: self.root)
+                print($0.index!, range[0].y, range[1].y, $0.dimension.length)
+            }
+            
+            $0.step = step
+            step += 1
+        }
+        
         for i in 0..<(props.count-1) {
-            var d1 = props[i]
+            let d1 = props[i]
 
             for j in (i+1)..<props.count {
-                var d2 = props[j]
+                guard d1.visible else {
+                    break
+                }
                 
-                let p1 = self.root.convert(
-                    d1.surface.convert(d1.dimension.position, to: self.root),
-                    to: self.scene
-                )
+                let d2 = props[j]
+                
+                if d2.equal(scene: self.scene, root: self.root, props: d1) {
+                    d1.visible = false
+                } else if d2.overlap(scene: self.scene, root: self.root, props: d1) {
+//                    d1.visible = false
+                }
+
+                
+//                if d2.overlap(scene: self.scene, root: self.root, props: d1)
+//                    || d2.equal(scene: self.scene, root: self.root, props: d1)
+//                {
+//                    // 片側だけ重なってたらor等しかったらd1(小さい方)を除外
+//                    d1.visible = false
+//                } 
+//                else if d2.contains(scene: self.scene, root: self.root, props: d1) {
+//                    // d2の内側に入ってたらd2を上の階層に移動
+//                    d2.step = d1.step + 1
+//                }
             }
+        }
+        
+        // 座標をstepに応じて更新
+        props.forEach {
+            $0.dimension.position = $0.position.dimensionPosition(
+                scene: self.scene,
+                root: self.root,
+                surface: $0.surface,
+                step: $0.step
+            )
         }
     }
     
@@ -200,6 +343,9 @@ final class SurfaceDimensions {
         //作り終わったら描画
         self.dimensions.forEach { position, props in
             props.forEach {
+                guard $0.visible else {
+                    return
+                }
                 $0.surface.addChild($0.dimension)
             }
         }
