@@ -21,9 +21,9 @@ final class SurfaceDimensions {
             
             let surfacePosition = scene.convert(surface.position, from: root)
 
-            var position = CGPoint(x: 0, y: 0)
-            
             let offset = CGFloat(50 * step)
+
+            var position = CGPoint(x: 0, y: 0)
 
             switch self {
             case .top:
@@ -236,7 +236,7 @@ final class SurfaceDimensions {
                 let dimension = FloorPlanDimension(
                     dimensions: surface.surface.dimensions,
                     withHeight: false
-                )799
+                )
                 
                 // 閾値(一旦適当)
                 guard 1 <=  dimension.length else { return }
