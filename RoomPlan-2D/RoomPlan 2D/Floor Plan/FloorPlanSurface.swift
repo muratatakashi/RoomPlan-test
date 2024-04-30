@@ -10,53 +10,55 @@ import RoomPlan
 
 class FloorPlanSurface: SKNode {
     
-    private let capturedSurface: CapturedRoom.Surface
+    let surface: CapturedRoom.Surface
     
     // MARK: - Computed properties
     
-    private var halfLength: CGFloat {
-        return CGFloat(capturedSurface.dimensions.x) * scalingFactor / 2
+    private var _halfLength: CGFloat {
+        return CGFloat(self.surface.dimensions.x) * FloorPlanPreference.shared.scalingFactor / 2
     }
     
-    private var pointA: CGPoint {
-        return CGPoint(x: -halfLength, y: 0)
+    private var _startPoint: CGPoint {
+        return CGPoint(x: -self._halfLength, y: 0)
     }
     
-    private var pointB: CGPoint {
-        return CGPoint(x: halfLength, y: 0)
+    private var _endPoint: CGPoint {
+        return CGPoint(x: self._halfLength, y: 0)
     }
     
-    private var pointC: CGPoint {
-        return pointB.rotateAround(point: pointA, by: 0.25 * .pi)
+    private var _doorEndPoint: CGPoint {
+        return self._endPoint.rotateAround(point: self._startPoint, by: 0.25 * .pi)
     }
     
     // MARK: - Init
     
-    init(capturedSurface: CapturedRoom.Surface) {
-        self.capturedSurface = capturedSurface
+    init(
+        capturedSurface surface: CapturedRoom.Surface
+    ) {
+        self.surface = surface
         
         super.init()
         
         // Set the surface's position using the transform matrix
-        let surfacePositionX = -CGFloat(capturedSurface.transform.position.x) * scalingFactor
-        let surfacePositionY = CGFloat(capturedSurface.transform.position.z) * scalingFactor
+        let surfacePositionX = -CGFloat(surface.transform.position.x) * FloorPlanPreference.shared.scalingFactor
+        let surfacePositionY = CGFloat(surface.transform.position.z) * FloorPlanPreference.shared.scalingFactor
         self.position = CGPoint(x: surfacePositionX, y: surfacePositionY)
         
         // Set the surface's zRotation using the transform matrix
-        self.zRotation = -CGFloat(capturedSurface.transform.eulerAngles.z - capturedSurface.transform.eulerAngles.y)
+        self.zRotation = -CGFloat(surface.transform.eulerAngles.z - surface.transform.eulerAngles.y)
         
         // Draw the right surface
-        switch capturedSurface.category {
+        switch surface.category {
         case .door:
-            drawDoor()
+            self.drawDoor()
         case .opening:
-            drawOpening()
+            self.drawOpening()
         case .wall:
-            drawWall()
+            self.drawWall()
         case .window:
-            drawWindow()
-        @unknown default:
-            drawWall()
+            self.drawWindow()
+        default:
+            self.drawWall()
         }
     }
     
@@ -67,97 +69,108 @@ class FloorPlanSurface: SKNode {
     // MARK: - Draw
 
     private func drawDoor() {
-        let hideWallPath = createPath(from: pointA, to: pointB)
-        let doorPath = createPath(from: pointA, to: pointC)
+        let hideWallPath = self.createPath(from: self._startPoint, to: self._endPoint)
+        let doorPath = self.createPath(from: self._startPoint, to: self._endPoint)
+//        let doorPath = self.createPath(from: self._startPoint, to: self._doorEndPoint)
 
         // Hide the wall underneath the door
-        let hideWallShape = createShapeNode(from: hideWallPath)
-        hideWallShape.strokeColor = floorPlanBackgroundColor
-        hideWallShape.lineWidth = hideSurfaceWith
-        hideWallShape.zPosition = hideSurfaceZPosition
+        let hideWallShape = self.createShapeNode(from: hideWallPath)
+        hideWallShape.strokeColor = FloorPlanPreference.shared.bgColor
+        hideWallShape.lineWidth = FloorPlanPreference.shared.hideSurfaceWith
+        hideWallShape.zPosition = FloorPlanPreference.shared.zHideSurface
         
         // The door itself
-        let doorShape = createShapeNode(from: doorPath)
+        let doorShape = self.createShapeNode(from: doorPath)
+        doorShape.strokeColor = .orange
         doorShape.lineCap = .square
-        doorShape.zPosition = doorZPosition
+        doorShape.zPosition = FloorPlanPreference.shared.zDoor
         
-        // The door's arc
-        let doorArcPath = CGMutablePath()
-        doorArcPath.addArc(
-            center: pointA,
-            radius: halfLength * 2,
-            startAngle: 0.25 * .pi,
-            endAngle: 0,
-            clockwise: true
-        )
+//        // The door's arc
+//        let doorArcPath = CGMutablePath()
+//        doorArcPath.addArc(
+//            center: self._startPoint,
+//            radius: self._halfLength * 2,
+//            startAngle: 0.25 * .pi,
+//            endAngle: 0,
+//            clockwise: true
+//        )
         
-        // Create a dashed path
-        let dashPattern: [CGFloat] = [24.0, 8.0]
-        let dashedArcPath = doorArcPath.copy(dashingWithPhase: 1, lengths: dashPattern)
-
-        let doorArcShape = createShapeNode(from: dashedArcPath)
-        doorArcShape.lineWidth = doorArcWidth
-        doorArcShape.zPosition = doorArcZPosition
+//        // Create a dashed path
+//        let dashPattern: [CGFloat] = [
+//            FloorPlanPreference.shared.doorDashWidth,
+//            FloorPlanPreference.shared.doorDashSpan
+//        ]
+//        let dashedArcPath = doorArcPath.copy(dashingWithPhase: 1, lengths: dashPattern)
+//
+//        let doorArcShape = self.createShapeNode(from: dashedArcPath)
+//        doorArcShape.lineWidth = FloorPlanPreference.shared.doorArcWidth
+//        doorArcShape.zPosition = FloorPlanPreference.shared.zDoorArc
         
-        addChild(hideWallShape)
-        addChild(doorShape)
-        addChild(doorArcShape)
+        self.addChild(hideWallShape)
+        self.addChild(doorShape)
+//        self.addChild(doorArcShape)
     }
     
     private func drawOpening() {
-        let openingPath = createPath(from: pointA, to: pointB)
+        let openingPath = self.createPath(from: self._startPoint, to: self._endPoint)
         
         // Hide the wall underneath the opening
-        let hideWallShape = createShapeNode(from: openingPath)
-        hideWallShape.strokeColor = floorPlanBackgroundColor
-        hideWallShape.lineWidth = hideSurfaceWith
-        hideWallShape.zPosition = hideSurfaceZPosition
+        let hideWallShape = self.createShapeNode(from: openingPath)
+        hideWallShape.strokeColor = .blue// FloorPlanPreference.shared.bgColor
+        hideWallShape.lineWidth = FloorPlanPreference.shared.hideSurfaceWith
+        hideWallShape.zPosition = FloorPlanPreference.shared.zHideSurface
         
-        addChild(hideWallShape)
+        self.addChild(hideWallShape)
     }
     
     private func drawWall() {
-        let wallPath = createPath(from: pointA, to: pointB)
-        let wallShape = createShapeNode(from: wallPath)
+        let wallPath = self.createPath(from: self._startPoint, to: self._endPoint)
+        let wallShape = self.createShapeNode(from: wallPath)
         wallShape.lineCap = .square
 
-        addChild(wallShape)
+//        let wallRect = createRect(
+//            from: self._startPoint,
+//            to: self._endPoint,
+//            width: FloorPlanPreference.shared.surfaceWith
+//        )
+//        let wallShape = self.createShapeNode(from: wallRect)
+        
+//        if self._showDimension {
+//            let dimensionPath = self.createPath(
+//                from: CGPoint(x: self._startPoint.x, y: -100),
+//                to: CGPoint(x: self._endPoint.x, y: -100)
+//            )
+//            let dimmensionShape = self.createShapeNode(from: dimensionPath)
+//            dimmensionShape.lineWidth = 3
+//            dimmensionShape.lineCap = .square
+//            wallShape.addChild(dimmensionShape)
+//        }
+
+        self.addChild(wallShape)
     }
     
     private func drawWindow() {
-        let windowPath = createPath(from: pointA, to: pointB)
+        let windowPath = self.createPath(from: self._startPoint, to: self._endPoint)
         
         // Hide the wall underneath the window
-        let hideWallShape = createShapeNode(from: windowPath)
-        hideWallShape.strokeColor = floorPlanBackgroundColor
-        hideWallShape.lineWidth = hideSurfaceWith
-        hideWallShape.zPosition = hideSurfaceZPosition
+        let hideWallShape = self.createShapeNode(from: windowPath)
+        hideWallShape.strokeColor = FloorPlanPreference.shared.bgColor
+        hideWallShape.lineWidth = FloorPlanPreference.shared.hideSurfaceWith
+        hideWallShape.zPosition = FloorPlanPreference.shared.zHideSurface
         
         // The window itself
-        let windowShape = createShapeNode(from: windowPath)
-        windowShape.lineWidth = windowWidth
-        windowShape.zPosition = windowZPosition
-        
-        addChild(hideWallShape)
-        addChild(windowShape)
+//        let windowShape = self.createShapeNode(from: windowPath)
+//        windowShape.lineWidth = FloorPlanPreference.shared.windowWidth
+        let windowRect = self.createRect(
+            from: self._startPoint,
+            to: self._endPoint,
+            width: FloorPlanPreference.shared.windowRectWidth
+        )
+        let windowShape = self.createShapeNode(from: windowRect)
+
+        windowShape.zPosition = FloorPlanPreference.shared.zWindow
+
+        self.addChild(hideWallShape)
+        self.addChild(windowShape)
     }
-    
-    // MARK: - Helper functions
-    
-    private func createPath(from pointA: CGPoint, to pointB: CGPoint) -> CGMutablePath {
-        let path = CGMutablePath()
-        path.move(to: pointA)
-        path.addLine(to: pointB)
-        
-        return path
-    }
-    
-    private func createShapeNode(from path: CGPath) -> SKShapeNode {
-        let shapeNode = SKShapeNode(path: path)
-        shapeNode.strokeColor = floorPlanSurfaceColor
-        shapeNode.lineWidth = surfaceWith
-        
-        return shapeNode
-    }
-    
 }

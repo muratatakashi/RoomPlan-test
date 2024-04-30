@@ -20,8 +20,13 @@ class RoomCaptureModel: RoomCaptureSessionDelegate {
     private let captureSessionConfig: RoomCaptureSession.Configuration
     private let roomBuilder: RoomBuilder
     
+    var capturedRooms: [CapturedRoom] = []
+
     // The final scan result
-    var finalRoom: CapturedRoom?
+    var finalStructure: CapturedStructure?
+    
+    private var _isFinished: Bool = false
+    
     
     // Required functions to conform to NSCoding protocol
     func encode(with coder: NSCoder) {
@@ -42,11 +47,22 @@ class RoomCaptureModel: RoomCaptureSessionDelegate {
         
     // Start and stop the capture session. Available from our RoomCaptureScanView.
     func startSession() {
+        self.capturedRooms = []
+        self._isFinished = false
         roomCaptureView.captureSession.run(configuration: captureSessionConfig)
     }
     
     func stopSession() {
+        self._isFinished = true
         roomCaptureView.captureSession.stop()
+    }
+    
+    func pauseSession() {
+        roomCaptureView.captureSession.stop(pauseARSession: false)
+    }
+    
+    func restartSession() {
+        roomCaptureView.captureSession.run(configuration: captureSessionConfig)
     }
     
     // Create the final scan result: a CapturedRoom object
@@ -60,8 +76,19 @@ class RoomCaptureModel: RoomCaptureSessionDelegate {
         }
         
         Task {
-            finalRoom = try! await roomBuilder.capturedRoom(from: data)
+            guard let capturedRoom = try? await roomBuilder.capturedRoom(from: data) else {
+                return
+            }
+            
+            self.capturedRooms.append(capturedRoom)
+            
+            // 終わった時点で複数部屋あれば合成
+            if self._isFinished,
+               !self.capturedRooms.isEmpty
+            {
+                let builder = StructureBuilder(options: [.beautifyObjects])
+                self.finalStructure = try? await builder.capturedStructure(from: self.capturedRooms)
+            }
         }
     }
-    
 }

@@ -10,28 +10,46 @@ import SpriteKit
 
 class FloorPlanScene: SKScene {
     
-    // MARK: - Properties
+    private let _structure: CapturedStructure
     
-    // Surfaces and objects from our scan result
-    private let surfaces: [CapturedRoom.Surface]
-    private let objects: [CapturedRoom.Object]
+    private var _surfaces: [CapturedRoom.Surface] {
+        self._structure.doors
+        + self._structure.openings
+        + self._structure.walls
+        + self._structure.windows
+    }
     
-    // MARK: - Init
+    private var _objects: [CapturedRoom.Object] {
+        self._structure.objects
+    }
     
-    init(capturedRoom: CapturedRoom) {
-        self.surfaces = capturedRoom.doors + capturedRoom.openings + capturedRoom.walls + capturedRoom.windows
-        self.objects = capturedRoom.objects
+    private var _rootNode: SKNode = SKNode()
+    
+    private var _surfaceDimensions: SurfaceDimensions?
+   
+    struct CameraProperty {
+        var scale: CGFloat = .init()
+        var position: CGPoint = .init()
+    }
+    private var _prevCameraProperty = CameraProperty()
+
+    init(capturedStructure: CapturedStructure) {
+        self._structure = capturedStructure
         
         super.init(size: CGSize(width: 1500, height: 1500))
         
         self.scaleMode = .aspectFill
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        self.backgroundColor = floorPlanBackgroundColor
+        self.backgroundColor = FloorPlanPreference.shared.bgColor
+        self.addChild(self._rootNode)
         
-        addCamera()
-        
-        drawSurfaces()
-        drawObjects()
+        self.addCamera()
+        self.drawSurfaces()
+//        drawObjects()
+        self.resetCamera()
+        self.drawSurfaceDimensions()
+        // カメラ位置を再調整
+        self.fixCameraPosition()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,63 +65,115 @@ class FloorPlanScene: SKScene {
         pinchGestureRecognizer.addTarget(self, action: #selector(pinchGestureAction(_:)))
         view.addGestureRecognizer(pinchGestureRecognizer)
     }
-    
-    // MARK: - Draw
-    
+
     private func drawSurfaces() {
-        for surface in surfaces {
+        for surface in self._surfaces {
             let surfaceNode = FloorPlanSurface(capturedSurface: surface)
-            addChild(surfaceNode)
+            self._rootNode.addChild(surfaceNode)
         }
+    }
+    
+    private func drawSurfaceDimensions() {
+        self._surfaceDimensions = SurfaceDimensions(
+            scene: self,
+            root: self._rootNode
+        )
+        self._surfaceDimensions?.draw()
     }
     
     private func drawObjects() {
-        for object in objects {
+        for object in self._objects {
             let objectNode = FloorPlanObject(capturedObject: object)
-            addChild(objectNode)
+            self._rootNode.addChild(objectNode)
         }
     }
-    
-    // MARK: - Camera
-    
+
     private func addCamera() {
         let cameraNode = SKCameraNode()
-        addChild(cameraNode)
+        self.addChild(cameraNode)
         
         self.camera = cameraNode
     }
     
-    // Variables that store camera scale and position at the start of a gesture
-    private var previousCameraScale = CGFloat()
-    private var previousCameraPosition = CGPoint()
+    // 回転角とスケールの初期設定
+    private func resetCamera() {
+        // 回転
+        self.fixCameraRotation()
+        // 位置
+        self.fixCameraPosition()
+        
+//        let rect = self._rootNode.calculateAccumulatedFrame()
+//        let bbox = SKShapeNode(rect: rect)
+//        bbox.fillColor = UIColor.red.withAlphaComponent(0.5)
+//        self.addChild(bbox)
+    }
     
-    // Pan gestures only handle camera movement in this scene
+    private func fixCameraRotation() {
+        self._rootNode.zRotation = 0
+        
+        // 一番長いsurfaceを探す
+        guard let surface = self._surfaces.sorted(by: {
+            $0.dimensions.x < $1.dimensions.x
+        }).last else {
+            return
+        }
+        
+        // 図形化
+        let floorPlanSurface = FloorPlanSurface(capturedSurface: surface)
+        
+        // 回転角
+        let zRot = floorPlanSurface.zRotation
+        
+        // rootをその分逆に回す
+        self._rootNode.zRotation = -zRot
+        
+        // iPhoneは縦向き
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            self._rootNode.zRotation -= (.pi / 2)
+        }
+    }
+    
+    private func fixCameraPosition() {
+        guard let camera = self.camera else { return }
+
+        let targetFrame = self._rootNode.calculateAccumulatedFrame()
+        let center = CGPoint(
+            x: targetFrame.origin.x + (targetFrame.width / 2),
+            y: targetFrame.origin.y + (targetFrame.height / 2)
+        )
+        camera.position = center
+        
+        // ついでにviewのサイズもノードが収まるサイズに
+        self.size = targetFrame.size
+    }
+
     @objc private func panGestureAction(_ sender: UIPanGestureRecognizer) {
         guard let camera = self.camera else { return }
         
         if sender.state == .began {
-            previousCameraPosition = camera.position
+            self._prevCameraProperty.position = camera.position
         }
         
-        let translationScale = camera.xScale
+        // 移動量は適当...
+        let translationScale = camera.xScale * FloorPlanPreference.shared.scalingFactor * 0.03
         let panTranslation = sender.translation(in: self.view)
         let newCameraPosition = CGPoint(
-            x: previousCameraPosition.x + panTranslation.x * -translationScale,
-            y: previousCameraPosition.y + panTranslation.y * translationScale
+            x: self._prevCameraProperty.position.x + panTranslation.x * -translationScale,
+            y: self._prevCameraProperty.position.y + panTranslation.y * translationScale
         )
         
         camera.position = newCameraPosition
     }
     
-    // Pinch gestures only handle camera movement in this scene
+
     @objc private func pinchGestureAction(_ sender: UIPinchGestureRecognizer) {
         guard let camera = self.camera else { return }
         
         if sender.state == .began {
-            previousCameraScale = camera.xScale
+            self._prevCameraProperty.scale = camera.xScale
         }
         
-        camera.setScale(previousCameraScale * 1 / sender.scale)
+        camera.setScale(self._prevCameraProperty.scale * 1 / sender.scale)
     }
     
 }

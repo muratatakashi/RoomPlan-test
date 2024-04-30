@@ -14,6 +14,7 @@ struct RoomCaptureScanView: View {
     
     @State private var isScanning = false
     @State private var isShowingFloorPlan = false
+    @State private var isPaused = false
     
     // MARK: - View Body
     var body: some View {
@@ -25,20 +26,42 @@ struct RoomCaptureScanView: View {
             VStack {
                 Spacer()
                 
-                // The button changes accoring to the state of isScanning
-                Button(isScanning ? "Done" : "View 2D floor plan") {
-                    if isScanning {
-                        stopSession()
-                    } else {
-                        isShowingFloorPlan = true
+                HStack {
+                    Spacer()
+
+                    if self.isScanning {
+                        Button(self.isPaused ? "再開" : "次の部屋へ") {
+                            if self.isPaused {
+                                self.restartSession()
+                            } else {
+                                self.pauseSession()
+                            }
+                        }
+                        .padding()
+                        .background(.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                        .fontWeight(.bold)
+                        .padding(.bottom)
+                        Spacer()
                     }
+
+                    Button(isScanning ? "完了" : "平面図を作成") {
+                        if isScanning {
+                            stopSession()
+                        } else {
+                            isShowingFloorPlan = true
+                        }
+                    }
+                    .padding()
+                    .background(Color("AccentColor"))
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
+                    .fontWeight(.bold)
+                    .padding(.bottom)
+                    
+                    Spacer()
                 }
-                .padding()
-                .background(Color("AccentColor"))
-                .foregroundColor(.white)
-                .clipShape(Capsule())
-                .fontWeight(.bold)
-                .padding(.bottom)
             }
         }
         
@@ -49,8 +72,11 @@ struct RoomCaptureScanView: View {
         
         // Show the floor plan in full screen
         .fullScreenCover(isPresented: $isShowingFloorPlan) {
-            SpriteView(scene: FloorPlanScene(capturedRoom: model.finalRoom!))
-                .ignoresSafeArea()
+            if let structure = model.finalStructure {
+                FloorPlanView(structure: structure) {
+                    self.isShowingFloorPlan.toggle()
+                }
+            }
         }
     }
     
@@ -68,6 +94,16 @@ struct RoomCaptureScanView: View {
         
         // Enable the screen to sleep again
         UIApplication.shared.isIdleTimerDisabled = false
+    }
+    
+    private func pauseSession() {
+        isPaused = true
+        self.model.pauseSession()
+    }
+    
+    private func restartSession() {
+        isPaused = false
+        self.model.restartSession()
     }
 }
 

@@ -10,17 +10,16 @@ import SpriteKit
 
 class FloorPlanScene: SKScene {
     
-    private let _room: CapturedRoom
+    private let _rooms: [CapturedRoom]
     
     private var _surfaces: [CapturedRoom.Surface] {
-        self._room.doors
-        + self._room.openings
-        + self._room.walls
-        + self._room.windows
+        self._rooms.flatMap {
+            $0.doors + $0.openings + $0.walls + $0.windows
+        }
     }
     
     private var _objects: [CapturedRoom.Object] {
-        self._room.objects
+        self._rooms.flatMap { $0.objects }
     }
     
     private var _rootNode: SKNode = SKNode()
@@ -33,8 +32,8 @@ class FloorPlanScene: SKScene {
     }
     private var _prevCameraProperty = CameraProperty()
 
-    init(capturedRoom: CapturedRoom) {
-        self._room = capturedRoom
+    init(capturedRooms: [CapturedRoom]) {
+        self._rooms = capturedRooms
         
         super.init(size: CGSize(width: 1500, height: 1500))
         

@@ -39,7 +39,7 @@ class Room2DViewController: UIViewController {
     
     private func setup() {
         
-        let vc = UIHostingController(rootView: SpriteView(scene: FloorPlanScene(capturedRoom: self.room)))
+        let vc = UIHostingController(rootView: SpriteView(scene: FloorPlanScene(capturedRooms: [self.room])))
         self.addChild(vc)
         vc.view.frame = view.bounds
         self.view.addSubview(vc.view)

@@ -10,22 +10,22 @@ import RoomPlan
 
 class FloorPlanObject: SKNode {
     
-    private let capturedObject: CapturedRoom.Object
+    private let object: CapturedRoom.Object
     
     // MARK: - Init
     
-    init(capturedObject: CapturedRoom.Object) {
-        self.capturedObject = capturedObject
+    init(capturedObject object: CapturedRoom.Object) {
+        self.object = object
         
         super.init()
         
         // Set the object's position using the transform matrix
-        let objectPositionX = -CGFloat(capturedObject.transform.position.x) * scalingFactor
-        let objectPositionY = CGFloat(capturedObject.transform.position.z) * scalingFactor
+        let objectPositionX = -CGFloat(object.transform.position.x) * FloorPlanPreference.shared.scalingFactor
+        let objectPositionY = CGFloat(object.transform.position.z) * FloorPlanPreference.shared.scalingFactor
         self.position = CGPoint(x: objectPositionX, y: objectPositionY)
         
         // Set the object's zRotation using the transform matrix
-        self.zRotation = -CGFloat(capturedObject.transform.eulerAngles.z - capturedObject.transform.eulerAngles.y)
+        self.zRotation = -CGFloat(object.transform.eulerAngles.z - object.transform.eulerAngles.y)
         
         drawObject()
     }
@@ -38,8 +38,8 @@ class FloorPlanObject: SKNode {
     
     private func drawObject() {
         // Calculate the object's dimensions
-        let objectWidth = CGFloat(capturedObject.dimensions.x) * scalingFactor
-        let objectHeight = CGFloat(capturedObject.dimensions.z) * scalingFactor
+        let objectWidth = CGFloat(object.dimensions.x) * FloorPlanPreference.shared.scalingFactor
+        let objectHeight = CGFloat(object.dimensions.z) * FloorPlanPreference.shared.scalingFactor
         
         // Create the object's rectangle
         let objectRect = CGRect(
@@ -52,16 +52,16 @@ class FloorPlanObject: SKNode {
         // A shape to fill the object
         let objectShape = SKShapeNode(rect: objectRect)
         objectShape.strokeColor = .clear
-        objectShape.fillColor = floorPlanSurfaceColor
+        objectShape.fillColor = FloorPlanPreference.shared.surfaceColor
         objectShape.alpha = 0.3
-        objectShape.zPosition = objectZPosition
+        objectShape.zPosition = FloorPlanPreference.shared.zObject
         
         // And another shape for the outline
         let objectOutlineShape = SKShapeNode(rect: objectRect)
-        objectOutlineShape.strokeColor = floorPlanSurfaceColor
-        objectOutlineShape.lineWidth = objectOutlineWidth
+        objectOutlineShape.strokeColor = FloorPlanPreference.shared.surfaceColor
+        objectOutlineShape.lineWidth = FloorPlanPreference.shared.objectOutlineWidth
         objectOutlineShape.lineJoin = .miter
-        objectOutlineShape.zPosition = objectOutlineZPosition
+        objectOutlineShape.zPosition = FloorPlanPreference.shared.zObjectOutline
                 
         // Add both shapes to the node
         addChild(objectShape)
