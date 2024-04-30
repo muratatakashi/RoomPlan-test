@@ -236,7 +236,7 @@ final class SurfaceDimensions {
                 let dimension = FloorPlanDimension(
                     dimensions: surface.surface.dimensions,
                     withHeight: false
-                )
+                )799
                 
                 // 閾値(一旦適当)
                 guard 1 <=  dimension.length else { return }
@@ -249,7 +249,8 @@ final class SurfaceDimensions {
                     step: step
                 )
                 
-                let label = SKLabelNode(text: "\(index)")
+                
+                let label = SKLabelNode(text: "\(Int (surface.surface.dimensions.x * 1000))")
                 label.fontName = FloorPlanPreference.shared.fontName
                 label.fontColor = FloorPlanPreference.shared.fontColor
                 label.fontSize = FloorPlanPreference.shared.fontSize
