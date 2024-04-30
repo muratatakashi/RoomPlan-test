@@ -73,7 +73,7 @@ struct RoomCaptureScanView: View {
         // Show the floor plan in full screen
         .fullScreenCover(isPresented: $isShowingFloorPlan) {
             if let structure = model.finalStructure {
-                FloorPlanView(structure: structure) {
+                FloorPlanView(model: FloorPlanModel(structure: structure)) {
                     self.isShowingFloorPlan.toggle()
                 }
             }
