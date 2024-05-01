@@ -8,16 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		52D58BC229DE82BC00EE345C /* MyHome in Resources */ = {isa = PBXBuildFile; fileRef = 52D58BC129DE82BC00EE345C /* MyHome */; };
-		7ED5FBFD2BD87EBC009731D0 /* FloorPlanPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FBF82BD87EBC009731D0 /* FloorPlanPreference.swift */; };
-		7ED5FBFE2BD87EBC009731D0 /* FloorPlanObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FBF92BD87EBC009731D0 /* FloorPlanObject.swift */; };
-		7ED5FBFF2BD87EBC009731D0 /* FloorPlanScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FBFA2BD87EBC009731D0 /* FloorPlanScene.swift */; };
-		7ED5FC002BD87EBC009731D0 /* FloorPlanSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FBFB2BD87EBC009731D0 /* FloorPlanSurface.swift */; };
 		7ED5FC042BD87EC9009731D0 /* CGPoint+RotateAround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FC012BD87EC9009731D0 /* CGPoint+RotateAround.swift */; };
 		7ED5FC052BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FC022BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift */; };
 		7ED5FC072BD880CC009731D0 /* Room2DViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FC062BD880CC009731D0 /* Room2DViewController.swift */; };
-		7EE9F6EF2BD9E967007F3D34 /* FloorPlanDimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE9F6EE2BD9E967007F3D34 /* FloorPlanDimension.swift */; };
-		7EE9F6F12BD9EF0C007F3D34 /* FloorPlanExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE9F6F02BD9EF0C007F3D34 /* FloorPlanExtensions.swift */; };
-		7EE9F6F32BDA317F007F3D34 /* SurfaceDimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE9F6F22BDA317F007F3D34 /* SurfaceDimensions.swift */; };
+		7EDF7DEF2BE1BDC300E63530 /* DrawParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE42BE1BDC300E63530 /* DrawParameters.swift */; };
+		7EDF7DF02BE1BDC300E63530 /* FloorPlanDimension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE52BE1BDC300E63530 /* FloorPlanDimension.swift */; };
+		7EDF7DF12BE1BDC300E63530 /* FloorPlanExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE62BE1BDC300E63530 /* FloorPlanExtensions.swift */; };
+		7EDF7DF22BE1BDC300E63530 /* FloorPlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE72BE1BDC300E63530 /* FloorPlanModel.swift */; };
+		7EDF7DF32BE1BDC300E63530 /* FloorPlanObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE82BE1BDC300E63530 /* FloorPlanObject.swift */; };
+		7EDF7DF42BE1BDC300E63530 /* FloorPlanPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE92BE1BDC300E63530 /* FloorPlanPreference.swift */; };
+		7EDF7DF52BE1BDC300E63530 /* FloorPlanScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DEA2BE1BDC300E63530 /* FloorPlanScene.swift */; };
+		7EDF7DF62BE1BDC300E63530 /* FloorPlanSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DEB2BE1BDC300E63530 /* FloorPlanSurface.swift */; };
+		7EDF7DF82BE1BDC300E63530 /* SurfaceDimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DED2BE1BDC300E63530 /* SurfaceDimensions.swift */; };
 		CF917C4829C97BA800F8BBDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF917C4729C97BA800F8BBDB /* AppDelegate.swift */; };
 		CF917C4A29C97BA800F8BBDB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF917C4929C97BA800F8BBDB /* SceneDelegate.swift */; };
 		CF917C4F29C97BA800F8BBDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF917C4D29C97BA800F8BBDB /* Main.storyboard */; };
@@ -31,16 +33,18 @@
 /* Begin PBXFileReference section */
 		52D58BC129DE82BC00EE345C /* MyHome */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MyHome; sourceTree = "<group>"; };
 		71563E9C2A099F1900906FBC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		7ED5FBF82BD87EBC009731D0 /* FloorPlanPreference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanPreference.swift; sourceTree = "<group>"; };
-		7ED5FBF92BD87EBC009731D0 /* FloorPlanObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanObject.swift; sourceTree = "<group>"; };
-		7ED5FBFA2BD87EBC009731D0 /* FloorPlanScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanScene.swift; sourceTree = "<group>"; };
-		7ED5FBFB2BD87EBC009731D0 /* FloorPlanSurface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanSurface.swift; sourceTree = "<group>"; };
 		7ED5FC012BD87EC9009731D0 /* CGPoint+RotateAround.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+RotateAround.swift"; sourceTree = "<group>"; };
 		7ED5FC022BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "simd_float4x4+EulerAnglesAndPosition.swift"; sourceTree = "<group>"; };
 		7ED5FC062BD880CC009731D0 /* Room2DViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Room2DViewController.swift; sourceTree = "<group>"; };
-		7EE9F6EE2BD9E967007F3D34 /* FloorPlanDimension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanDimension.swift; sourceTree = "<group>"; };
-		7EE9F6F02BD9EF0C007F3D34 /* FloorPlanExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanExtensions.swift; sourceTree = "<group>"; };
-		7EE9F6F22BDA317F007F3D34 /* SurfaceDimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurfaceDimensions.swift; sourceTree = "<group>"; };
+		7EDF7DE42BE1BDC300E63530 /* DrawParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawParameters.swift; sourceTree = "<group>"; };
+		7EDF7DE52BE1BDC300E63530 /* FloorPlanDimension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanDimension.swift; sourceTree = "<group>"; };
+		7EDF7DE62BE1BDC300E63530 /* FloorPlanExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanExtensions.swift; sourceTree = "<group>"; };
+		7EDF7DE72BE1BDC300E63530 /* FloorPlanModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanModel.swift; sourceTree = "<group>"; };
+		7EDF7DE82BE1BDC300E63530 /* FloorPlanObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanObject.swift; sourceTree = "<group>"; };
+		7EDF7DE92BE1BDC300E63530 /* FloorPlanPreference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanPreference.swift; sourceTree = "<group>"; };
+		7EDF7DEA2BE1BDC300E63530 /* FloorPlanScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanScene.swift; sourceTree = "<group>"; };
+		7EDF7DEB2BE1BDC300E63530 /* FloorPlanSurface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPlanSurface.swift; sourceTree = "<group>"; };
+		7EDF7DED2BE1BDC300E63530 /* SurfaceDimensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfaceDimensions.swift; sourceTree = "<group>"; };
 		A23A755945767DCC32DA1B96 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		BDCDF999C0FBF74170DC5369 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		CF917C4429C97BA800F8BBDB /* RoomPlanMultiscanMerging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoomPlanMultiscanMerging.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,20 +78,6 @@
 			path = LICENSE;
 			sourceTree = "<group>";
 		};
-		7ED5FBFC2BD87EBC009731D0 /* Floor Plan */ = {
-			isa = PBXGroup;
-			children = (
-				7ED5FBF82BD87EBC009731D0 /* FloorPlanPreference.swift */,
-				7ED5FBF92BD87EBC009731D0 /* FloorPlanObject.swift */,
-				7ED5FBFA2BD87EBC009731D0 /* FloorPlanScene.swift */,
-				7ED5FBFB2BD87EBC009731D0 /* FloorPlanSurface.swift */,
-				7EE9F6EE2BD9E967007F3D34 /* FloorPlanDimension.swift */,
-				7EE9F6F02BD9EF0C007F3D34 /* FloorPlanExtensions.swift */,
-				7EE9F6F22BDA317F007F3D34 /* SurfaceDimensions.swift */,
-			);
-			path = "Floor Plan";
-			sourceTree = "<group>";
-		};
 		7ED5FC032BD87EC9009731D0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -95,6 +85,23 @@
 				7ED5FC022BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7EDF7DEE2BE1BDC300E63530 /* Floor Plan */ = {
+			isa = PBXGroup;
+			children = (
+				7EDF7DE42BE1BDC300E63530 /* DrawParameters.swift */,
+				7EDF7DE52BE1BDC300E63530 /* FloorPlanDimension.swift */,
+				7EDF7DE62BE1BDC300E63530 /* FloorPlanExtensions.swift */,
+				7EDF7DE72BE1BDC300E63530 /* FloorPlanModel.swift */,
+				7EDF7DE82BE1BDC300E63530 /* FloorPlanObject.swift */,
+				7EDF7DE92BE1BDC300E63530 /* FloorPlanPreference.swift */,
+				7EDF7DEA2BE1BDC300E63530 /* FloorPlanScene.swift */,
+				7EDF7DEB2BE1BDC300E63530 /* FloorPlanSurface.swift */,
+				7EDF7DED2BE1BDC300E63530 /* SurfaceDimensions.swift */,
+			);
+			name = "Floor Plan";
+			path = "../../Floor Plan";
 			sourceTree = "<group>";
 		};
 		A891DD654324EBABB7F6771F /* Configuration */ = {
@@ -127,8 +134,8 @@
 		CF917C4629C97BA800F8BBDB /* RoomPlanMultiscanMerging */ = {
 			isa = PBXGroup;
 			children = (
+				7EDF7DEE2BE1BDC300E63530 /* Floor Plan */,
 				7ED5FC032BD87EC9009731D0 /* Extensions */,
-				7ED5FBFC2BD87EBC009731D0 /* Floor Plan */,
 				52D58BC129DE82BC00EE345C /* MyHome */,
 				CF917C4729C97BA800F8BBDB /* AppDelegate.swift */,
 				CF917C4929C97BA800F8BBDB /* SceneDelegate.swift */,
@@ -217,20 +224,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EDF7DEF2BE1BDC300E63530 /* DrawParameters.swift in Sources */,
+				7EDF7DF32BE1BDC300E63530 /* FloorPlanObject.swift in Sources */,
+				7EDF7DF22BE1BDC300E63530 /* FloorPlanModel.swift in Sources */,
 				CF917C5E29C97CC400F8BBDB /* RoomTableViewController.swift in Sources */,
-				7ED5FC002BD87EBC009731D0 /* FloorPlanSurface.swift in Sources */,
+				7EDF7DF12BE1BDC300E63530 /* FloorPlanExtensions.swift in Sources */,
+				7EDF7DF52BE1BDC300E63530 /* FloorPlanScene.swift in Sources */,
 				CF917C4829C97BA800F8BBDB /* AppDelegate.swift in Sources */,
+				7EDF7DF82BE1BDC300E63530 /* SurfaceDimensions.swift in Sources */,
+				7EDF7DF62BE1BDC300E63530 /* FloorPlanSurface.swift in Sources */,
 				7ED5FC052BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift in Sources */,
-				7ED5FBFF2BD87EBC009731D0 /* FloorPlanScene.swift in Sources */,
 				CF917C6229C9961000F8BBDB /* URL+Extensions.swift in Sources */,
-				7ED5FBFD2BD87EBC009731D0 /* FloorPlanPreference.swift in Sources */,
-				7EE9F6F12BD9EF0C007F3D34 /* FloorPlanExtensions.swift in Sources */,
+				7EDF7DF42BE1BDC300E63530 /* FloorPlanPreference.swift in Sources */,
 				7ED5FC042BD87EC9009731D0 /* CGPoint+RotateAround.swift in Sources */,
-				7EE9F6EF2BD9E967007F3D34 /* FloorPlanDimension.swift in Sources */,
 				CF917C4A29C97BA800F8BBDB /* SceneDelegate.swift in Sources */,
-				7EE9F6F32BDA317F007F3D34 /* SurfaceDimensions.swift in Sources */,
-				7ED5FBFE2BD87EBC009731D0 /* FloorPlanObject.swift in Sources */,
 				CF917C6029C9820000F8BBDB /* HeaderView.swift in Sources */,
+				7EDF7DF02BE1BDC300E63530 /* FloorPlanDimension.swift in Sources */,
 				7ED5FC072BD880CC009731D0 /* Room2DViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

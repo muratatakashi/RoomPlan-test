@@ -94,11 +94,23 @@ class RoomTableViewController: UITableViewController {
         
         let url = self.room(for: indexPath)
         let jsonURL = url.appending(path: "capturedRoom.json")
-        guard let room = try? loadCapturedRoom(from: jsonURL) else { return }
-
-        let vc = Room2DViewController(room: room)
-        vc.modalPresentationStyle = .overFullScreen
-        self.present(vc, animated: true)
+        
+        if let structure = try? loadCapturedStructure(from: jsonURL) {
+            let vc = Room2DViewController(structure: structure)
+            vc.modalPresentationStyle = .overFullScreen
+            self.present(vc, animated: true)
+        } else if let room = try? loadCapturedRoom(from: jsonURL) {
+            Task { @MainActor in
+                do {
+                    let structure = try await self.loadCapturedStructure(from: [room])
+                    let vc = Room2DViewController(structure: structure)
+                    vc.modalPresentationStyle = .overFullScreen
+                    self.present(vc, animated: true)
+                } catch {
+                    print(error)
+                }
+            }
+        }
     }
 
     /// Deselects a table row and disables the Merge button if there isn't a selection present.
@@ -156,6 +168,19 @@ class RoomTableViewController: UITableViewController {
         guard let data = jsonData else { return nil }
         let capturedRoom = try? JSONDecoder().decode(CapturedRoom.self, from: data)
         return capturedRoom
+    }
+    
+    private func loadCapturedStructure(from url: URL) throws -> CapturedStructure? {
+        let jsonData = try? Data(contentsOf: url)
+        guard let data = jsonData else { return nil }
+        let capturedStructure = try? JSONDecoder().decode(CapturedStructure.self, from: data)
+        return capturedStructure
+    }
+    
+    
+    private func loadCapturedStructure(from rooms: [CapturedRoom]) async throws -> CapturedStructure {
+        let builder = StructureBuilder(options: [.beautifyObjects])
+        return try await builder.capturedStructure(from: rooms)
     }
 
     /// Creates a 3D model from the given selected room URLS.

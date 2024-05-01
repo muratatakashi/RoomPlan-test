@@ -12,10 +12,10 @@ import SpriteKit
 import RoomPlan
 
 class Room2DViewController: UIViewController {
-    private var room: CapturedRoom
+    private var structure: CapturedStructure
     
-    init(room: CapturedRoom) {
-        self.room = room
+    init(structure: CapturedStructure) {
+        self.structure = structure
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -39,7 +39,7 @@ class Room2DViewController: UIViewController {
     
     private func setup() {
         
-        let vc = UIHostingController(rootView: SpriteView(scene: FloorPlanScene(capturedRooms: [self.room])))
+        let vc = UIHostingController(rootView: SpriteView(scene: FloorPlanScene(capturedStructure: self.structure)))
         self.addChild(vc)
         vc.view.frame = view.bounds
         self.view.addSubview(vc.view)
