@@ -186,7 +186,7 @@ class FloorPlanScene: SKScene {
         }
         
         // 移動量は適当...
-        let translationScale = camera.xScale
+        let translationScale = camera.xScale * FloorPlanPreference.shared.scalingFactor * 2
         let panTranslation = sender.translation(in: self.view)
         let newCameraPosition = CGPoint(
             x: self._prevCameraProperty.position.x + panTranslation.x * -translationScale,
