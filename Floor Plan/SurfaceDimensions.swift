@@ -288,6 +288,8 @@ final class SurfaceDimensions {
     }
     
     private func setupDimensionSteps(to props: [DimensionProperty]) {
+        guard !props.isEmpty else { return }
+        
         var step: Int = 0
         props.forEach {
             if $0.position == .left {

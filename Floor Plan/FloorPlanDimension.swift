@@ -13,7 +13,7 @@ class FloorPlanDimension: SKNode {
     private let _drawHeight: Bool
     
     private var _halfLength: CGFloat {
-        return CGFloat(self._dimensions.x) * FloorPlanPreference.shared.scalingFactor / 2
+        return CGFloat(self._dimensions.x) * FloorPlanPreference.shared.m2mm / 2
     }
     var scaledHalfLength: CGFloat {
         self._halfLength

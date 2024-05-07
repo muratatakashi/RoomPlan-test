@@ -7,36 +7,37 @@
 
 import UIKit
 
-struct FloorPlanPreference {
+final class FloorPlanPreference {
     private init() {}
     
     static let shared: FloorPlanPreference = .init()
     
-    // Universal scaling factor
-    let scalingFactor: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 200 : 200
-
+    var scalingFactor: CGFloat = 1
+    
+    var m2mm: CGFloat { 1000 }
+    
     // Colors
     let bgColor: UIColor = .white
     let surfaceColor: UIColor = .black
     let dimensionColor: UIColor = .red
-
+    
     // Line widths
-    let surfaceWith: CGFloat = 22.0
-    let hideSurfaceWith: CGFloat = 30//24.0
-    let doorDashWidth: CGFloat = 24.0
-    let doorDashSpan: CGFloat = 8.0
-    let windowWidth: CGFloat = 8.0
-    let windowRectWidth: CGFloat = 40.0
-    let doorArcWidth: CGFloat = 8.0
-    let objectOutlineWidth: CGFloat = 8.0
-    let rectLineWidth: CGFloat = 8.0
-    let dimensionWidth: CGFloat = 8.0
+    var surfaceWith: CGFloat { 4.0 * self.scalingFactor }
+    var hideSurfaceWith: CGFloat { 6.0 * self.scalingFactor }
+    var doorDashWidth: CGFloat { 4.8 * self.scalingFactor }
+    var doorDashSpan: CGFloat { 1.6 * self.scalingFactor }
+    var windowWidth: CGFloat { 1.6 * self.scalingFactor }
+    var windowRectWidth: CGFloat { 8.0 * self.scalingFactor }
+    var doorArcWidth: CGFloat { 1.6 * self.scalingFactor }
+    var objectOutlineWidth: CGFloat { 1.6 * self.scalingFactor }
+    var rectLineWidth: CGFloat { 1.6 * self.scalingFactor }
+    var dimensionWidth: CGFloat { 1.6 * self.scalingFactor }
     
     // label
     let fontColor: UIColor = .black
-    let fontSize: CGFloat = 100
+    var fontSize: CGFloat { 20 * self.scalingFactor }
     let fontName: String = "HelveticaNeue-Bold"
-
+    
     // zPositions
     let zHideSurface: CGFloat = 1
     let zWindow: CGFloat = 10
@@ -45,7 +46,7 @@ struct FloorPlanPreference {
     let zObject: CGFloat = 30
     let zObjectOutline: CGFloat = 31
     let zDimension: CGFloat = 40
-
+    
 }
 
 

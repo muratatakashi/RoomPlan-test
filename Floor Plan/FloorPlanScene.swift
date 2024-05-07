@@ -32,11 +32,13 @@ class FloorPlanScene: SKScene {
         var position: CGPoint = .init()
     }
     private var _prevCameraProperty = CameraProperty()
+    
+    private let _viewSize = CGSize(width: 1000, height: 1000)
 
     init(capturedStructure: CapturedStructure) {
         self._structure = capturedStructure
         
-        super.init(size: CGSize(width: 1500, height: 1500))
+        super.init(size: self._viewSize)
         
         self.scaleMode = .aspectFill
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -44,12 +46,25 @@ class FloorPlanScene: SKScene {
         self.addChild(self._rootNode)
         
         self.addCamera()
+
+        // ビューの設定
+        self.setupScale()
+
+        // 各オブジェクト
         self.drawSurfaces()
 //        drawObjects()
-        self.resetCamera()
+        
+        // 向きを調整
+        self.fixCameraRotation()
+        
+        // 寸法
         self.drawSurfaceDimensions()
-        // カメラ位置を再調整
+        
+        // カメラ位置
         self.fixCameraPosition()
+        
+        // ビューのサイズを設定
+        self.setupViewSize()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -95,19 +110,6 @@ class FloorPlanScene: SKScene {
         self.camera = cameraNode
     }
     
-    // 回転角とスケールの初期設定
-    private func resetCamera() {
-        // 回転
-        self.fixCameraRotation()
-        // 位置
-        self.fixCameraPosition()
-        
-//        let rect = self._rootNode.calculateAccumulatedFrame()
-//        let bbox = SKShapeNode(rect: rect)
-//        bbox.fillColor = UIColor.red.withAlphaComponent(0.5)
-//        self.addChild(bbox)
-    }
-    
     private func fixCameraRotation() {
         self._rootNode.zRotation = 0
         
@@ -142,10 +144,36 @@ class FloorPlanScene: SKScene {
             y: targetFrame.origin.y + (targetFrame.height / 2)
         )
         camera.position = center
-        
-        // ついでにviewのサイズもノードが収まるサイズに
-        self.size = targetFrame.size
     }
+    
+    private func setupViewSize() {
+        let targetFrame = self._rootNode.calculateAccumulatedFrame()
+        self.size = CGSize(
+            width: targetFrame.width * 1.2,
+            height: targetFrame.height * 1.2
+        )
+    }
+    
+    private func setupScale() {
+        // 一旦描画する
+        FloorPlanPreference.shared.scalingFactor = 1
+        
+        self.drawSurfaces()
+        self.drawSurfaceDimensions()
+        
+        // フレームサイズを取得
+        let targetFrame = self._rootNode.calculateAccumulatedFrame()
+        
+        // スケールを計算
+        let length = max(targetFrame.width, targetFrame.height)
+        
+        FloorPlanPreference.shared.scalingFactor = length / self._viewSize.width
+        
+        // スケールを設定したら消す
+        self._rootNode.removeAllChildren()
+    }
+    
+    
 
     @objc private func panGestureAction(_ sender: UIPanGestureRecognizer) {
         guard let camera = self.camera else { return }
@@ -155,7 +183,7 @@ class FloorPlanScene: SKScene {
         }
         
         // 移動量は適当...
-        let translationScale = camera.xScale * FloorPlanPreference.shared.scalingFactor * 0.03
+        let translationScale = camera.xScale
         let panTranslation = sender.translation(in: self.view)
         let newCameraPosition = CGPoint(
             x: self._prevCameraProperty.position.x + panTranslation.x * -translationScale,

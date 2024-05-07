@@ -15,7 +15,7 @@ class FloorPlanSurface: SKNode {
     // MARK: - Computed properties
     
     private var _halfLength: CGFloat {
-        return CGFloat(self.surface.dimensions.x) * FloorPlanPreference.shared.scalingFactor / 2
+        return CGFloat(self.surface.dimensions.x) * FloorPlanPreference.shared.m2mm / 2
     }
     
     private var _startPoint: CGPoint {
@@ -40,8 +40,8 @@ class FloorPlanSurface: SKNode {
         super.init()
         
         // Set the surface's position using the transform matrix
-        let surfacePositionX = -CGFloat(surface.transform.position.x) * FloorPlanPreference.shared.scalingFactor
-        let surfacePositionY = CGFloat(surface.transform.position.z) * FloorPlanPreference.shared.scalingFactor
+        let surfacePositionX = -CGFloat(surface.transform.position.x) * FloorPlanPreference.shared.m2mm
+        let surfacePositionY = CGFloat(surface.transform.position.z) * FloorPlanPreference.shared.m2mm
         self.position = CGPoint(x: surfacePositionX, y: surfacePositionY)
         
         // Set the surface's zRotation using the transform matrix

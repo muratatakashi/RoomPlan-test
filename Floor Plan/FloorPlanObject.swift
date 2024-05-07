@@ -20,8 +20,8 @@ class FloorPlanObject: SKNode {
         super.init()
         
         // Set the object's position using the transform matrix
-        let objectPositionX = -CGFloat(object.transform.position.x) * FloorPlanPreference.shared.scalingFactor
-        let objectPositionY = CGFloat(object.transform.position.z) * FloorPlanPreference.shared.scalingFactor
+        let objectPositionX = -CGFloat(object.transform.position.x) * FloorPlanPreference.shared.m2mm
+        let objectPositionY = CGFloat(object.transform.position.z) * FloorPlanPreference.shared.m2mm
         self.position = CGPoint(x: objectPositionX, y: objectPositionY)
         
         // Set the object's zRotation using the transform matrix
@@ -38,8 +38,8 @@ class FloorPlanObject: SKNode {
     
     private func drawObject() {
         // Calculate the object's dimensions
-        let objectWidth = CGFloat(object.dimensions.x) * FloorPlanPreference.shared.scalingFactor
-        let objectHeight = CGFloat(object.dimensions.z) * FloorPlanPreference.shared.scalingFactor
+        let objectWidth = CGFloat(object.dimensions.x) * FloorPlanPreference.shared.m2mm
+        let objectHeight = CGFloat(object.dimensions.z) * FloorPlanPreference.shared.m2mm
         
         // Create the object's rectangle
         let objectRect = CGRect(
