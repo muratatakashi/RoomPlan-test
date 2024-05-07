@@ -148,9 +148,12 @@ class FloorPlanScene: SKScene {
     
     private func setupViewSize() {
         let targetFrame = self._rootNode.calculateAccumulatedFrame()
+        
+        let scale = UIDevice.current.userInterfaceIdiom == .pad ? 1.2 : 1.5
+        
         self.size = CGSize(
-            width: targetFrame.width * 1.2,
-            height: targetFrame.height * 1.2
+            width: targetFrame.width * scale,
+            height: targetFrame.height * scale
         )
     }
     
