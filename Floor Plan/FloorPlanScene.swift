@@ -33,12 +33,12 @@ class FloorPlanScene: SKScene {
     }
     private var _prevCameraProperty = CameraProperty()
     
-    private let _viewSize = CGSize(width: 1000, height: 1000)
+    private let _defaultViewSize = CGSize(width: 1000, height: 1000)
 
     init(capturedStructure: CapturedStructure) {
         self._structure = capturedStructure
         
-        super.init(size: self._viewSize)
+        super.init(size: self._defaultViewSize)
         
         self.scaleMode = .aspectFill
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -149,12 +149,30 @@ class FloorPlanScene: SKScene {
     private func setupViewSize() {
         let targetFrame = self._rootNode.calculateAccumulatedFrame()
         
-        let scale = UIDevice.current.userInterfaceIdiom == .pad ? 1.2 : 1.5
-        
-        self.size = CGSize(
-            width: targetFrame.width * scale,
-            height: targetFrame.height * scale
-        )
+        if let window = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let aspectRatio = window.screen.bounds.width / window.screen.bounds.height
+            let length = max(targetFrame.width, targetFrame.height)
+            
+            if 1 < aspectRatio {
+                // 横長
+                self.size = CGSize(
+                    width: length * aspectRatio,
+                    height: length
+                )
+            } else {
+                // 縦長
+                self.size = CGSize(
+                    width: length,
+                    height: length / aspectRatio
+                )
+            }
+        } else {
+            let scale = UIDevice.current.userInterfaceIdiom == .pad ? 1.2 : 1.5
+            self.size = CGSize(
+                width: targetFrame.width * scale,
+                height: targetFrame.height * scale
+            )
+        }
     }
     
     private func setupScale() {
@@ -170,7 +188,7 @@ class FloorPlanScene: SKScene {
         // スケールを計算
         let length = max(targetFrame.width, targetFrame.height)
         
-        FloorPlanPreference.shared.scalingFactor = length / self._viewSize.width
+        FloorPlanPreference.shared.scalingFactor = length / self._defaultViewSize.width
         
         // スケールを設定したら消す
         self._rootNode.removeAllChildren()
