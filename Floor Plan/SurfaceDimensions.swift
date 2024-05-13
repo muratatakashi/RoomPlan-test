@@ -20,6 +20,7 @@ final class SurfaceDimensions {
             let frame = root.calculateAccumulatedFrame()
             
             let surfacePosition = scene.convert(surface.position, from: root)
+//            let p = surface.convertWorld(position: surface.position)
 
             let offset = CGFloat(50 * step)
 
@@ -65,10 +66,7 @@ final class SurfaceDimensions {
             scene: SKScene,
             root: SKNode
         ) -> [CGPoint] {
-            let p = root.convert(
-                self.surface.convert(self.dimension.position, to: root),
-                to: scene
-            )
+            let p = self.dimension.convertWorld(position: self.dimension.position)
             
             switch position {
             case .top, .bottom:

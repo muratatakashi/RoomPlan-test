@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		52D58BC229DE82BC00EE345C /* MyHome in Resources */ = {isa = PBXBuildFile; fileRef = 52D58BC129DE82BC00EE345C /* MyHome */; };
+		7E0AF93A2BF19CAF00D89F8B /* SKNode+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0AF9392BF19CAF00D89F8B /* SKNode+extension.swift */; };
 		7ED5FC042BD87EC9009731D0 /* CGPoint+RotateAround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FC012BD87EC9009731D0 /* CGPoint+RotateAround.swift */; };
 		7ED5FC052BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FC022BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift */; };
 		7ED5FC072BD880CC009731D0 /* Room2DViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5FC062BD880CC009731D0 /* Room2DViewController.swift */; };
@@ -33,6 +34,7 @@
 /* Begin PBXFileReference section */
 		52D58BC129DE82BC00EE345C /* MyHome */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MyHome; sourceTree = "<group>"; };
 		71563E9C2A099F1900906FBC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7E0AF9392BF19CAF00D89F8B /* SKNode+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKNode+extension.swift"; sourceTree = "<group>"; };
 		7ED5FC012BD87EC9009731D0 /* CGPoint+RotateAround.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+RotateAround.swift"; sourceTree = "<group>"; };
 		7ED5FC022BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "simd_float4x4+EulerAnglesAndPosition.swift"; sourceTree = "<group>"; };
 		7ED5FC062BD880CC009731D0 /* Room2DViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Room2DViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				7EDF7DEA2BE1BDC300E63530 /* FloorPlanScene.swift */,
 				7EDF7DEB2BE1BDC300E63530 /* FloorPlanSurface.swift */,
 				7EDF7DED2BE1BDC300E63530 /* SurfaceDimensions.swift */,
+				7E0AF9392BF19CAF00D89F8B /* SKNode+extension.swift */,
 			);
 			name = "Floor Plan";
 			path = "../../Floor Plan";
@@ -233,6 +236,7 @@
 				CF917C4829C97BA800F8BBDB /* AppDelegate.swift in Sources */,
 				7EDF7DF82BE1BDC300E63530 /* SurfaceDimensions.swift in Sources */,
 				7EDF7DF62BE1BDC300E63530 /* FloorPlanSurface.swift in Sources */,
+				7E0AF93A2BF19CAF00D89F8B /* SKNode+extension.swift in Sources */,
 				7ED5FC052BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift in Sources */,
 				CF917C6229C9961000F8BBDB /* URL+Extensions.swift in Sources */,
 				7EDF7DF42BE1BDC300E63530 /* FloorPlanPreference.swift in Sources */,

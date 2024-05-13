@@ -58,13 +58,44 @@ class FloorPlanScene: SKScene {
         self.fixCameraRotation()
         
         // 寸法
-        self.drawSurfaceDimensions()
+//        self.drawSurfaceDimensions()
         
         // カメラ位置
         self.fixCameraPosition()
         
         // ビューのサイズを設定
         self.setupViewSize()
+        
+        self.children.forEach {
+            guard let surfaceNode = $0 as? FloorPlanSurface,
+                  surfaceNode.surface.category == .wall
+            else { return }
+            
+            let wps = surfaceNode.worldPositions
+            
+            let d = distance(
+                SIMD2<Float>(
+                    Float(wps[0].x),
+                    Float(wps[0].y)
+                ),
+                SIMD2<Float>(
+                    Float(wps[1].x),
+                    Float(wps[1].y)
+                )
+            )
+            print(d, wps)
+            
+            let node1 = SKShapeNode(circleOfRadius: 100)
+            node1.fillColor = .blue
+            node1.position = wps[0]
+            
+            let node2 = SKShapeNode(circleOfRadius: 100)
+            node2.fillColor = .green
+            node2.position = wps[1]
+            
+            self.addChild(node1)
+            self.addChild(node2)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -133,12 +164,29 @@ class FloorPlanScene: SKScene {
         if UIDevice.current.userInterfaceIdiom == .phone {
             self._rootNode.zRotation -= (.pi / 2)
         }
+        
+        // 全ノードを回転後のワールド座標で置き換える
+        self._rootNode.children.forEach {
+            guard let surfaceNode = $0 as? FloorPlanSurface else {
+                return
+            }
+            
+            let node = FloorPlanSurface(
+                capturedSurface: surfaceNode.surface,
+                from: surfaceNode.worldPositions[0],
+                to: surfaceNode.worldPositions[1]
+            )
+            
+            self.addChild(node)
+        }
+        
+        self._rootNode.removeFromParent()
     }
     
     private func fixCameraPosition() {
         guard let camera = self.camera else { return }
 
-        let targetFrame = self._rootNode.calculateAccumulatedFrame()
+        let targetFrame = self.calculateAccumulatedFrame()
         let center = CGPoint(
             x: targetFrame.origin.x + (targetFrame.width / 2),
             y: targetFrame.origin.y + (targetFrame.height / 2)
@@ -147,7 +195,7 @@ class FloorPlanScene: SKScene {
     }
     
     private func setupViewSize() {
-        let targetFrame = self._rootNode.calculateAccumulatedFrame()
+        let targetFrame = self.calculateAccumulatedFrame()
         
         if let window = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             let aspectRatio = window.screen.bounds.width / window.screen.bounds.height
@@ -183,7 +231,7 @@ class FloorPlanScene: SKScene {
         self.drawSurfaceDimensions()
         
         // フレームサイズを取得
-        let targetFrame = self._rootNode.calculateAccumulatedFrame()
+        let targetFrame = self.calculateAccumulatedFrame()
         
         // スケールを計算
         let length = max(targetFrame.width, targetFrame.height)
@@ -191,7 +239,7 @@ class FloorPlanScene: SKScene {
         FloorPlanPreference.shared.scalingFactor = length / self._defaultViewSize.width
         
         // スケールを設定したら消す
-        self._rootNode.removeAllChildren()
+        self.removeAllChildren()
     }
     
     

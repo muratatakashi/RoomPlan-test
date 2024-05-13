@@ -18,16 +18,18 @@ class FloorPlanSurface: SKNode {
         return CGFloat(self.surface.dimensions.x) * FloorPlanPreference.shared.m2mm / 2
     }
     
-    private var _startPoint: CGPoint {
-        return CGPoint(x: -self._halfLength, y: 0)
-    }
-    
-    private var _endPoint: CGPoint {
-        return CGPoint(x: self._halfLength, y: 0)
-    }
+    private var _startPoint: CGPoint = CGPointZero
+    private var _endPoint: CGPoint = CGPointZero
     
     private var _doorEndPoint: CGPoint {
         return self._endPoint.rotateAround(point: self._startPoint, by: 0.25 * .pi)
+    }
+    
+    var worldPositions: [CGPoint] {
+        [
+            self.convertWorld(position: self._startPoint),
+            self.convertWorld(position: self._endPoint)
+        ]
     }
     
     // MARK: - Init
@@ -46,6 +48,36 @@ class FloorPlanSurface: SKNode {
         
         // Set the surface's zRotation using the transform matrix
         self.zRotation = -CGFloat(surface.transform.eulerAngles.z - surface.transform.eulerAngles.y)
+        
+        self._startPoint = CGPoint(x: -self._halfLength, y: 0)
+        self._endPoint = CGPoint(x: self._halfLength, y: 0)
+        
+        // Draw the right surface
+        switch surface.category {
+        case .door:
+            self.drawDoor()
+        case .opening:
+            self.drawOpening()
+        case .wall:
+            self.drawWall()
+        case .window:
+            self.drawWindow()
+        default:
+            self.drawWall()
+        }
+    }
+    
+    init(
+        capturedSurface surface: CapturedRoom.Surface,
+        from startPoint: CGPoint,
+        to endPoint: CGPoint
+    ) {
+        self.surface = surface
+        
+        super.init()
+        
+        self._startPoint = startPoint
+        self._endPoint = endPoint
         
         // Draw the right surface
         switch surface.category {
