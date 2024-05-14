@@ -47,14 +47,14 @@ final class SurfaceDimensions {
     
     class DimensionProperty {
         let position: Position
-        let surface: FloorPlanSurface
-        let dimension: FloorPlanDimension
+        let surface: FloorPlan.Surface
+        let dimension: FloorPlan.Dimension
         var step: Int
         var visible: Bool = true
         
         var index: Int? = nil
         
-        init(position: Position, surface: FloorPlanSurface, dimension: FloorPlanDimension, step: Int, visible: Bool) {
+        init(position: Position, surface: FloorPlan.Surface, dimension: FloorPlan.Dimension, step: Int, visible: Bool) {
             self.position = position
             self.surface = surface
             self.dimension = dimension
@@ -168,7 +168,7 @@ final class SurfaceDimensions {
         self.load()
     }
 
-    private(set) var surfaces: [Position:[FloorPlanSurface]] = [:]
+    private(set) var surfaces: [Position:[FloorPlan.Surface]] = [:]
     private(set) var dimensions: [Position:[DimensionProperty]] = [:]
     
     private func load() {
@@ -179,7 +179,7 @@ final class SurfaceDimensions {
     private func assignSurfaces() {
         // 上下左右に振り分け
         self.root.children.forEach {
-            guard let surface = $0 as? FloorPlanSurface,
+            guard let surface = $0 as? FloorPlan.Surface,
                   surface.surface.category == .wall // 一旦壁だけ
             else {
                 return
@@ -231,7 +231,7 @@ final class SurfaceDimensions {
             }
             surfaces.forEach { surface in
                 let step: Int = 0
-                let dimension = FloorPlanDimension(
+                let dimension = FloorPlan.Dimension(
                     dimensions: surface.surface.dimensions,
                     withHeight: false
                 )
@@ -249,9 +249,9 @@ final class SurfaceDimensions {
                 
                 
                 let label = SKLabelNode(text: "\(Int (surface.surface.dimensions.x * 1000))")
-                label.fontName = FloorPlanPreference.shared.fontName
-                label.fontColor = FloorPlanPreference.shared.fontColor
-                label.fontSize = FloorPlanPreference.shared.fontSize
+                label.fontName = FloorPlan.Preference.shared.fontName
+                label.fontColor = FloorPlan.Preference.shared.fontColor
+                label.fontSize = FloorPlan.Preference.shared.fontSize
                 dimension.addChild(label)
                 
                 let property = DimensionProperty(

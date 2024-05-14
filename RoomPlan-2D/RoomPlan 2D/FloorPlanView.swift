@@ -27,7 +27,7 @@ struct FloorPlanView: View {
     
     var body: some View {
         ZStack {
-            SpriteView(scene: FloorPlanScene(capturedStructure: self.structure))
+            SpriteView(scene: FloorPlan.Scene(capturedStructure: self.structure))
             VStack {
                 HStack {
                     Button(action: self.onDismiss) {
