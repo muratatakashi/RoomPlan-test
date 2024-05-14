@@ -162,40 +162,10 @@ extension FloorPlan {
                     return
                 }
                 
-                switch surfaceNode.surface.category {
-                case .door:
-                    nodes.append(
-                        FloorPlan.Door(
-                            capturedSurface: surfaceNode.surface,
-                            from: surfaceNode.world.start,
-                            to: surfaceNode.world.end
-                        )
-                    )
-                case .opening:
-                    nodes.append(
-                        FloorPlan.Opening(
-                            capturedSurface: surfaceNode.surface,
-                            from: surfaceNode.world.start,
-                            to: surfaceNode.world.end
-                        )
-                    )
-                case .window:
-                    nodes.append(
-                        FloorPlan.Window(
-                            capturedSurface: surfaceNode.surface,
-                            from: surfaceNode.world.start,
-                            to: surfaceNode.world.end
-                        )
-                    )
-                default:
-                    nodes.append(
-                        FloorPlan.Wall(
-                            capturedSurface: surfaceNode.surface,
-                            from: surfaceNode.world.start,
-                            to: surfaceNode.world.end
-                        )
-                    )
-                }
+                nodes.append(
+                    FloorPlan.Surface.convertWorld(localSurface: surfaceNode)
+                )
+                
                 surfaceNode.removeFromParent()
             }
             
@@ -255,16 +225,7 @@ extension FloorPlan {
         
         private func drawSurfaces() {
             self._surfaces.forEach {
-                switch $0.category {
-                case .door:
-                    self._rootNode.addChild(FloorPlan.Door(capturedSurface: $0))
-                case .opening:
-                    self._rootNode.addChild(FloorPlan.Opening(capturedSurface: $0))
-                case .window:
-                    self._rootNode.addChild(FloorPlan.Window(capturedSurface: $0))
-                default:
-                    self._rootNode.addChild(FloorPlan.Wall(capturedSurface: $0))
-                }
+                self._rootNode.addChild(FloorPlan.Surface.factory(surface: $0))
             }
         }
         
