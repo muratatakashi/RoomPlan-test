@@ -13,7 +13,7 @@ extension FloorPlan {
         
         private let _structure: CapturedStructure
         
-        private var _module: Module = .m910
+        private var _module: Module = .none
         
         private var _surfaces: [CapturedRoom.Surface] {
             self._structure.doors

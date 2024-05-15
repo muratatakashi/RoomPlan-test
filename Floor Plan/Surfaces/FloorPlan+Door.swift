@@ -17,16 +17,24 @@ extension FloorPlan {
         }
         
         private var _limitWidth: CGFloat {
-            1000
+            900
+        }
+        
+        private var _doorWidth: CGFloat {
+            min(self.length, self._limitWidth)
         }
         
         var doorLocal: SurfacePoint {
-            SurfacePoint(
-                start: super.local.start,
-                end: super.local.end.rotateAround(
-                    point: super.local.start,
-                    by: 0.5 * .pi
-                )
+            var end = super.local.end.rotateAround(
+                point: super.local.start,
+                by: 0.5 * .pi
+            )
+            
+            end = self.local.start + (end - self.local.start).normalized() * self._doorWidth
+            
+            return SurfacePoint(
+                start: self.local.start,
+                end: end
             )
         }
         
@@ -68,7 +76,7 @@ extension FloorPlan {
                 let doorArcPath = CGMutablePath()
                 doorArcPath.addArc(
                     center: self.doorLocal.start,
-                    radius: self.length,
+                    radius: self._doorWidth,
                     startAngle: angle + offsetAngle,
                     endAngle: angle,
                     clockwise: true

@@ -14,8 +14,11 @@ import RoomPlan
 class Room2DViewController: UIViewController {
     private var structure: CapturedStructure
     
+    private var scene: FloorPlan.Scene
+    
     init(structure: CapturedStructure) {
         self.structure = structure
+        self.scene = FloorPlan.Scene(capturedStructure: structure)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,18 +40,108 @@ class Room2DViewController: UIViewController {
         return button
     }()
     
+    
+    private lazy var _910Button: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("910", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.backgroundColor = .gray
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(m910ButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    private func m910ButtonTapped() {
+        self.scene.reload(by: .m910)
+    }
+    
+    private lazy var _985Button: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("985", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.backgroundColor = .gray
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(m985ButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    private func m985ButtonTapped() {
+        self.scene.reload(by: .m985)
+    }
+    
+    private lazy var _1000Button: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("1000", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.backgroundColor = .gray
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(m1000ButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    private func m1000ButtonTapped() {
+        self.scene.reload(by: .m1000)
+    }
+    
+    private lazy var _rawButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("raw", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.backgroundColor = .gray
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(rawButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    private func rawButtonTapped() {
+        self.scene.reload(by: .none)
+    }
+    
     private func setup() {
         
-        let vc = UIHostingController(rootView: SpriteView(scene: FloorPlan.Scene(capturedStructure: self.structure)))
+        let vc = UIHostingController(rootView: SpriteView(scene: self.scene))
         self.addChild(vc)
         vc.view.frame = view.bounds
         self.view.addSubview(vc.view)
         vc.didMove(toParent: self)
         
-        self.view.addSubview(self._dismissButton)
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        
+        stackView.addArrangedSubview(self._dismissButton)
+        stackView.addArrangedSubview(self._910Button)
+        stackView.addArrangedSubview(self._985Button)
+        stackView.addArrangedSubview(self._1000Button)
+        stackView.addArrangedSubview(self._rawButton)
+        
+        self.view.addSubview(stackView)
         NSLayoutConstraint.activate([
-            self._dismissButton.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor),
-            self._dismissButton.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor),
+            stackView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: 8),
+            stackView.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor),
+            
+            self._910Button.heightAnchor.constraint(equalToConstant: 32),
+            self._985Button.heightAnchor.constraint(equalToConstant: 32),
+            self._1000Button.heightAnchor.constraint(equalToConstant: 32),
+            self._rawButton.heightAnchor.constraint(equalToConstant: 32),
+            
+            self._910Button.widthAnchor.constraint(equalToConstant: 70),
+            self._985Button.widthAnchor.constraint(equalToConstant: 70),
+            self._1000Button.widthAnchor.constraint(equalToConstant: 70),
+            self._rawButton.widthAnchor.constraint(equalToConstant: 70),
         ])
     }
     
