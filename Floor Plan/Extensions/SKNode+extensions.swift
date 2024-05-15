@@ -1,5 +1,5 @@
 //
-//  FloorPlanExtensions.swift
+//  SKNode+extensions.swift
 //  RoomPlanMultiscanMerging
 //
 //  Created by Takashi Murata on 2024/04/25.
@@ -35,12 +35,7 @@ extension SKNode {
     ) -> CGRect {
         
         // 線の長さ
-        let length = CGFloat(
-            distance(
-                SIMD2<Float>(Float(end.x),Float(end.y)),
-                SIMD2<Float>(Float(start.x),Float(start.y))
-            )
-        )
+        let length = (end - start).length()
         
         // 横棒作る
         return CGRect(
@@ -66,24 +61,21 @@ extension SKNode {
         shapeNode.lineWidth = lineWidth
         
         // 中心
-        let center = CGPoint(x: (start.x + end.x) / 2, y: (start.y + end.y) / 2)
+        let center = (start + end) / 2
         
         // 角度
-        let angle = atan2(end.y - start.y, end.x - start.x)
+        let angle = start.angle(to: end)
 
         shapeNode.position = center
         shapeNode.zRotation = angle
         
         return shapeNode
     }
-}
-
-extension CGFloat {
-    var degree: CGFloat {
-        self * 180 / .pi
-    }
     
-    var radian: CGFloat {
-        self * .pi / 180
+    func convertWorld(position localPosition: CGPoint) -> CGPoint {
+        guard let scene = self.scene else {
+            return localPosition
+        }
+        return self.convert(localPosition, to: scene)
     }
 }

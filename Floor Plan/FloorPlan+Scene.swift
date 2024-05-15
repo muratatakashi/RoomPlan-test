@@ -13,6 +13,8 @@ extension FloorPlan {
         
         private let _structure: CapturedStructure
         
+        private var _module: Module = .m910
+        
         private var _surfaces: [CapturedRoom.Surface] {
             self._structure.doors
             + self._structure.openings
@@ -25,6 +27,8 @@ extension FloorPlan {
         }
         
         private var _rootNode: SKNode = SKNode()
+        
+        private lazy var _pillarDetector = PillarDetector()
         
         private var _surfaceDimensions: SurfaceDimensions?
        
@@ -42,26 +46,6 @@ extension FloorPlan {
             super.init(size: self._defaultViewSize)
 
             self.setupScene()
-            
-
-
-            // debug
-            self._rootNode.children.forEach {
-                guard let surfaceNode = $0 as? FloorPlan.Surface,
-                      surfaceNode.surface.category == .wall
-                else { return }
-                
-                let node1 = SKShapeNode(circleOfRadius: 100)
-                node1.fillColor = .blue
-                node1.position = surfaceNode.world.start
-                
-                let node2 = SKShapeNode(circleOfRadius: 100)
-                node2.fillColor = .green
-                node2.position = surfaceNode.world.end
-                
-                self._rootNode.addChild(node1)
-                self._rootNode.addChild(node2)
-            }
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -99,6 +83,8 @@ extension FloorPlan {
         }
         
         private func loadScene() {
+            self._rootNode.removeAllChildren()
+            
             // 1回描画して傾きの補正とビューのスケールを求める
             self.drawSurfaces()
             self.setupScale()
@@ -108,6 +94,9 @@ extension FloorPlan {
 
             // 各図形の座標系をローカルからワールドに変換
             self.convertLocalToWorld()
+            
+            // 推定柱を描画
+            self.drawPillars()
             
             // ビューサイズ設定
             self.setupViewSize()
@@ -162,8 +151,12 @@ extension FloorPlan {
                     return
                 }
                 
+                // ついでにモジュールで座標を補正する
                 nodes.append(
-                    FloorPlan.Surface.convertWorld(localSurface: surfaceNode)
+                    FloorPlan.Surface.convertWorld(
+                        localSurface: surfaceNode,
+                        module: self._module
+                    )
                 )
                 
                 surfaceNode.removeFromParent()
@@ -229,6 +222,13 @@ extension FloorPlan {
             }
         }
         
+        private func drawPillars() {
+            self._pillarDetector.predict(from: self._rootNode.children.compactMap { $0 as? Surface})
+            self._pillarDetector.pillars.forEach {
+                self._rootNode.addChild($0)
+            }
+        }
+        
         private func drawSurfaceDimensions() {
             self._surfaceDimensions = SurfaceDimensions(
                 scene: self,
@@ -274,6 +274,9 @@ extension FloorPlan {
             camera.setScale(self._prevCameraProperty.scale * 1 / sender.scale)
         }
         
+        func reload(by module: Module) {
+            self._module = module
+            self.loadScene()
+        }
     }
-
 }

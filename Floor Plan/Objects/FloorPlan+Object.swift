@@ -9,7 +9,10 @@ import SpriteKit
 import RoomPlan
 
 extension FloorPlan {
-    final class Object: SKNode {
+    final class Object: SKNode, FloorPlanNodeProtocol {
+        var priority: CGFloat {
+            Preference.shared.zObject
+        }
         
         private let object: CapturedRoom.Object
         
@@ -28,16 +31,14 @@ extension FloorPlan {
             // Set the object's zRotation using the transform matrix
             self.zRotation = -CGFloat(object.transform.eulerAngles.z - object.transform.eulerAngles.y)
             
-            drawObject()
+            self.draw()
         }
         
         required init?(coder aDecoder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
         
-        // MARK: - Draw
-        
-        private func drawObject() {
+        func draw() {
             // Calculate the object's dimensions
             let objectWidth = CGFloat(object.dimensions.x) * Preference.shared.m2mm
             let objectHeight = CGFloat(object.dimensions.z) * Preference.shared.m2mm
@@ -55,19 +56,18 @@ extension FloorPlan {
             objectShape.strokeColor = .clear
             objectShape.fillColor = Preference.shared.surfaceColor
             objectShape.alpha = 0.3
-            objectShape.zPosition = Preference.shared.zObject
+            objectShape.zPosition = self.priority
             
             // And another shape for the outline
             let objectOutlineShape = SKShapeNode(rect: objectRect)
             objectOutlineShape.strokeColor = Preference.shared.surfaceColor
             objectOutlineShape.lineWidth = Preference.shared.objectOutlineWidth
             objectOutlineShape.lineJoin = .miter
-            objectOutlineShape.zPosition = Preference.shared.zObjectOutline
+            objectOutlineShape.zPosition = self.priority + 1
                     
             // Add both shapes to the node
             addChild(objectShape)
             addChild(objectOutlineShape)
         }
-        
     }
 }

@@ -16,18 +16,13 @@ extension FloorPlan {
     }
 }
 
-//protocol FloorPlanSurfaceProtocol {
-//    var surface: CapturedRoom.Surface { get }
-//    var length: CGFloat { get }
-//    var local: FloorPlan.SurfacePoint { get }
-//    var world: FloorPlan.SurfacePoint { get }
-//    
-//    func draw()
-//}
-
 extension FloorPlan {
     
-    class Surface: SKNode/*, FloorPlanSurfaceProtocol*/ {
+    class Surface: SKNode, FloorPlanNodeProtocol {
+        var priority: CGFloat {
+            Preference.shared.zSurface
+        }
+        
         private(set) var surface: CapturedRoom.Surface
         
         var length: CGFloat {
