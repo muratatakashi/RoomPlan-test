@@ -41,7 +41,13 @@ extension FloorPlan {
         }
         
         func corret(point: CGPoint) -> CGPoint {
-            guard let unit = self.div4 else { return point }
+            guard let unit = self.div4 else {
+                // noneの場合は四捨五入
+                return CGPoint(
+                    x: round(point.x),
+                    y: round(point.y)
+                )
+            }
             
             // 小数点以下は要らん
             var x = CGFloat(Int(point.x))

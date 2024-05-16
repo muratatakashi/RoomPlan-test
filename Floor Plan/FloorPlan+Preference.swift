@@ -25,7 +25,7 @@ extension FloorPlan {
         // Colors
         let bgColor: UIColor = .white
         let surfaceColor: UIColor = .black
-        let dimensionColor: UIColor = .red
+        let dimensionColor: UIColor = .black
         let wallColor: UIColor = .clear
         let windowColor: UIColor = .green
         let openingColor: UIColor = .gray
@@ -43,7 +43,9 @@ extension FloorPlan {
         var objectOutlineWidth: CGFloat { 1.6 * self.scalingFactor * self.deviceScale }
         var rectLineWidth: CGFloat { 1.6 * self.scalingFactor * self.deviceScale }
         var dimensionWidth: CGFloat { 1.6 * self.scalingFactor * self.deviceScale }
-        
+        var dimensionDashWidth: CGFloat { 5 * self.scalingFactor * self.deviceScale }
+        var dimensionDashSpan: CGFloat { 5 * self.scalingFactor * self.deviceScale }
+
         // Depth
         var defaultWallDepth: CGFloat { 0.16 * self.m2mm }
         var otherDepth: CGFloat { 0.05 * self.m2mm }

@@ -13,7 +13,9 @@ extension FloorPlan {
         
         private let _structure: CapturedStructure
         
-        private var _module: Module = .none
+        private(set) var module: Module = .none
+        
+        private(set) var simpleDimension: Bool = false
         
         private var _surfaces: [CapturedRoom.Surface] {
             self._structure.doors
@@ -157,7 +159,7 @@ extension FloorPlan {
                 nodes.append(
                     FloorPlan.Surface.convertWorld(
                         localSurface: surfaceNode,
-                        module: self._module
+                        module: self.module
                     )
                 )
                 
@@ -200,6 +202,16 @@ extension FloorPlan {
                     height: targetFrame.height * scale
                 )
             }
+            
+            let center = targetFrame.origin
+            let label = SKLabelNode(fontNamed: Preference.shared.fontName)
+            label.text = "hello world"
+            label.color = .red//Preference.shared.fontColor
+            label.fontSize = 1000//Preference.shared.fontSize
+            label.position = center
+            label.zPosition = 100000
+            
+            self._rootNode.addChild(label)
         }
         
         private func moveCameraToCenter() {
@@ -232,7 +244,7 @@ extension FloorPlan {
         }
         
         private func drawDimensions() {
-            self._dimensionDetector.load(root: self._rootNode, pillars: self._pillarDetector.pillars)
+            self._dimensionDetector.load(root: self._rootNode, pillars: self._pillarDetector.pillars, simply: self.simpleDimension)
             self._dimensionDetector.dimensions.forEach {
                 self._rootNode.addChild($0)
             }
@@ -275,8 +287,9 @@ extension FloorPlan {
             camera.setScale(self._prevCameraProperty.scale * 1 / sender.scale)
         }
         
-        func reload(by module: Module) {
-            self._module = module
+        func reload(by module: Module, simpleDimension: Bool) {
+            self.module = module
+            self.simpleDimension = simpleDimension
             self.loadScene()
         }
     }

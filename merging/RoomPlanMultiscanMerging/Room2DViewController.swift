@@ -55,7 +55,7 @@ class Room2DViewController: UIViewController {
     
     @objc
     private func m910ButtonTapped() {
-        self.scene.reload(by: .m910)
+        self.scene.reload(by: .m910, simpleDimension: self.scene.simpleDimension)
     }
     
     private lazy var _985Button: UIButton = {
@@ -72,7 +72,7 @@ class Room2DViewController: UIViewController {
     
     @objc
     private func m985ButtonTapped() {
-        self.scene.reload(by: .m985)
+        self.scene.reload(by: .m985, simpleDimension: self.scene.simpleDimension)
     }
     
     private lazy var _1000Button: UIButton = {
@@ -89,7 +89,7 @@ class Room2DViewController: UIViewController {
     
     @objc
     private func m1000ButtonTapped() {
-        self.scene.reload(by: .m1000)
+        self.scene.reload(by: .m1000, simpleDimension: self.scene.simpleDimension)
     }
     
     private lazy var _rawButton: UIButton = {
@@ -106,7 +106,24 @@ class Room2DViewController: UIViewController {
     
     @objc
     private func rawButtonTapped() {
-        self.scene.reload(by: .none)
+        self.scene.reload(by: .none, simpleDimension: self.scene.simpleDimension)
+    }
+    
+    private lazy var _dimensionButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("寸法切り替え", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.backgroundColor = .gray
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(dimensionButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    private func dimensionButtonTapped() {
+        self.scene.reload(by: self.scene.module, simpleDimension: !self.scene.simpleDimension)
     }
     
     private func setup() {
@@ -129,19 +146,26 @@ class Room2DViewController: UIViewController {
         stackView.addArrangedSubview(self._rawButton)
         
         self.view.addSubview(stackView)
+        self.view.addSubview(self._dimensionButton)
+        
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: 8),
             stackView.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor),
+            
+            self._dimensionButton.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -8),
+            self._dimensionButton.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor),
             
             self._910Button.heightAnchor.constraint(equalToConstant: 32),
             self._985Button.heightAnchor.constraint(equalToConstant: 32),
             self._1000Button.heightAnchor.constraint(equalToConstant: 32),
             self._rawButton.heightAnchor.constraint(equalToConstant: 32),
-            
+            self._dimensionButton.heightAnchor.constraint(equalToConstant: 32),
+
             self._910Button.widthAnchor.constraint(equalToConstant: 70),
             self._985Button.widthAnchor.constraint(equalToConstant: 70),
             self._1000Button.widthAnchor.constraint(equalToConstant: 70),
             self._rawButton.widthAnchor.constraint(equalToConstant: 70),
+            self._dimensionButton.widthAnchor.constraint(equalToConstant: 100),
         ])
     }
     

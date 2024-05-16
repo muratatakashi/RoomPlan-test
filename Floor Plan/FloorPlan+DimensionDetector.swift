@@ -22,7 +22,14 @@ extension FloorPlan {
         
         private(set) var dimensions: [Dimension] = []
         
-        func load(root: SKNode, pillars: [Pillar]) {
+        private(set) var _simply: Bool = false
+        
+        func load(
+            root: SKNode,
+            pillars: [Pillar],
+            simply: Bool
+        ) {
+            self._simply = simply
             self.loadDimensionMap(root: root, pillars: pillars)
             self.loadDimensions(root: root)
         }
@@ -106,39 +113,82 @@ extension FloorPlan {
             
             let frame = root.calculateAccumulatedFrame()
             
+            let offset: CGFloat = 500
+            let rootOffset: CGFloat = 50
+            
+            struct DimensionParam {
+                let position: Position
+                let p0: Pillar
+                let p1: Pillar
+                let offset: CGFloat
+                let rootOffset: CGFloat
+            }
+            
             self._dimensionMap.forEach { position, pillars in
                 
+                var params = [DimensionParam]()
+                
                 for i in 0..<(pillars.count - 1) {
-                    let p0 = pillars[i]
-                    let p1 = pillars[i+1]
-                    
-                    switch position {
+                    params.append(
+                        DimensionParam(
+                            position: position,
+                            p0: pillars[i],
+                            p1: pillars[i+1],
+                            offset: offset,
+                            rootOffset: rootOffset
+                        )
+                    )
+                }
+
+                // 3個以上柱がある場合は全体も表示する
+                if 3 <= pillars.count {
+                    params.append(
+                        DimensionParam(
+                            position: position,
+                            p0: pillars.first!,
+                            p1: pillars.last!,
+                            offset: offset * 2,
+                            rootOffset: rootOffset
+                        )
+                    )
+                }
+                
+                params.forEach {
+                    switch $0.position {
                     case .left:
                         self.dimensions.append(
                             Dimension(
-                                from: CGPoint(x: frame.minX, y: p0.position.y),
-                                to: CGPoint(x: frame.minX, y: p1.position.y)
+                                p0: CGPoint(x: frame.minX - $0.offset, y: $0.p0.position.y),
+                                p1: CGPoint(x: frame.minX - $0.offset, y: $0.p1.position.y),
+                                rootPosition0: !self._simply ? $0.p0.position : CGPoint(x: frame.minX - $0.rootOffset, y: $0.p0.position.y),
+                                rootPosition1: !self._simply ? $0.p1.position : CGPoint(x: frame.minX - $0.rootOffset, y: $0.p1.position.y)
                             )
                         )
                     case .right:
                         self.dimensions.append(
                             Dimension(
-                                from: CGPoint(x: frame.maxX, y: p0.position.y),
-                                to: CGPoint(x: frame.maxX, y: p1.position.y)
+                                p0: CGPoint(x: frame.maxX + $0.offset, y: $0.p0.position.y),
+                                p1: CGPoint(x: frame.maxX + $0.offset, y: $0.p1.position.y),
+                                rootPosition0: !self._simply ? $0.p0.position : CGPoint(x: frame.maxX + $0.rootOffset, y: $0.p0.position.y),
+                                rootPosition1: !self._simply ? $0.p1.position : CGPoint(x: frame.maxX + $0.rootOffset, y: $0.p1.position.y)
                             )
                         )
                     case .top:
                         self.dimensions.append(
                             Dimension(
-                                from: CGPoint(x: p0.position.x, y: frame.minY),
-                                to: CGPoint(x: p1.position.x, y: frame.minY)
+                                p0: CGPoint(x: $0.p0.position.x, y: frame.minY - $0.offset),
+                                p1: CGPoint(x: $0.p1.position.x, y: frame.minY - $0.offset),
+                                rootPosition0: !self._simply ? $0.p0.position : CGPoint(x: $0.p0.position.x, y: frame.minY - $0.rootOffset),
+                                rootPosition1: !self._simply ? $0.p1.position : CGPoint(x: $0.p1.position.x, y: frame.minY - $0.rootOffset)
                             )
                         )
                     case .bottom:
                         self.dimensions.append(
                             Dimension(
-                                from: CGPoint(x: p0.position.x, y: frame.maxY),
-                                to: CGPoint(x: p1.position.x, y: frame.maxY)
+                                p0: CGPoint(x: $0.p0.position.x, y: frame.maxY + $0.offset),
+                                p1: CGPoint(x: $0.p1.position.x, y: frame.maxY + $0.offset),
+                                rootPosition0: !self._simply ?  $0.p0.position : CGPoint(x: $0.p0.position.x, y: frame.maxY + $0.rootOffset),
+                                rootPosition1: !self._simply ?  $0.p1.position : CGPoint(x: $0.p1.position.x, y: frame.maxY + $0.rootOffset)
                             )
                         )
                     }

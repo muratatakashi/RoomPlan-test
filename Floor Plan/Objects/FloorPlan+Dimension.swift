@@ -16,10 +16,19 @@ extension FloorPlan {
         
         let start: CGPoint
         let end: CGPoint
+        let startRoot: CGPoint
+        let endRoot: CGPoint
         
-        init(from start: CGPoint, to end: CGPoint) {
+        init(
+            p0 start: CGPoint,
+            p1 end: CGPoint,
+            rootPosition0 root0: CGPoint,
+            rootPosition1 root1: CGPoint
+        ) {
             self.start = start
             self.end = end
+            self.startRoot = root0
+            self.endRoot = root1
             
             super.init()
             
@@ -31,28 +40,46 @@ extension FloorPlan {
         }
         
         func draw() {
-            
-            let path = self.createPath(
-                from: self.start,
-                to: self.end
+            let shape = self.createShapeNode(
+                from: self.createPath(from: self.start, to: self.end)
             )
-            let shape = self.createShapeNode(from: path)
             shape.lineWidth = Preference.shared.dimensionWidth
             shape.strokeColor = Preference.shared.dimensionColor
-
-            let start = SKShapeNode(circleOfRadius: Preference.shared.dimensionWidth * 5)
-            start.fillColor = Preference.shared.dimensionColor
-            start.position = self.start
-
-            let end = SKShapeNode(circleOfRadius: Preference.shared.dimensionWidth * 5)
-            end.fillColor = Preference.shared.dimensionColor
-            end.position = self.end
             
+            let dashPattern: [CGFloat] = [
+                Preference.shared.dimensionDashWidth,
+                Preference.shared.dimensionDashSpan
+            ]
+            
+            let start = self.createShapeNode(
+                from: self.createPath(from: self.startRoot, to: self.start)
+                    .copy(dashingWithPhase: 1, lengths: dashPattern)
+            )
+            start.lineWidth = Preference.shared.dimensionWidth
+            start.strokeColor = Preference.shared.dimensionColor
+
+            let end = self.createShapeNode(
+                from: self.createPath(from: self.endRoot, to: self.end)
+                    .copy(dashingWithPhase: 1, lengths: dashPattern)
+            )
+            end.lineWidth = Preference.shared.dimensionWidth
+            end.strokeColor = Preference.shared.dimensionColor
+            
+            let center = (self.start + self.end) / 2
+            let length = Int((self.end - self.start).length())
+            let label = SKLabelNode(fontNamed: Preference.shared.fontName)
+            label.text = length.description
+            label.color = Preference.shared.fontColor
+            label.fontSize = Preference.shared.fontSize
+            label.position = center
+            label.zRotation = self.start.angle(to: self.end)
+
             self.zPosition = self.priority
             
             self.addChild(shape)
             self.addChild(start)
             self.addChild(end)
+            self.addChild(label)
         }
     }
 
