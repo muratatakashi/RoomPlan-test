@@ -28,7 +28,7 @@
 		7EDF7DF32BE1BDC300E63530 /* FloorPlan+Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE82BE1BDC300E63530 /* FloorPlan+Object.swift */; };
 		7EDF7DF42BE1BDC300E63530 /* FloorPlan+Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DE92BE1BDC300E63530 /* FloorPlan+Preference.swift */; };
 		7EDF7DF52BE1BDC300E63530 /* FloorPlan+Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DEA2BE1BDC300E63530 /* FloorPlan+Scene.swift */; };
-		7EDF7DF82BE1BDC300E63530 /* SurfaceDimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DED2BE1BDC300E63530 /* SurfaceDimensions.swift */; };
+		7EDF7DF82BE1BDC300E63530 /* FloorPlan+DimensionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDF7DED2BE1BDC300E63530 /* FloorPlan+DimensionDetector.swift */; };
 		CF917C4829C97BA800F8BBDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF917C4729C97BA800F8BBDB /* AppDelegate.swift */; };
 		CF917C4A29C97BA800F8BBDB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF917C4929C97BA800F8BBDB /* SceneDelegate.swift */; };
 		CF917C4F29C97BA800F8BBDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF917C4D29C97BA800F8BBDB /* Main.storyboard */; };
@@ -62,7 +62,7 @@
 		7EDF7DE82BE1BDC300E63530 /* FloorPlan+Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FloorPlan+Object.swift"; sourceTree = "<group>"; };
 		7EDF7DE92BE1BDC300E63530 /* FloorPlan+Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FloorPlan+Preference.swift"; sourceTree = "<group>"; };
 		7EDF7DEA2BE1BDC300E63530 /* FloorPlan+Scene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FloorPlan+Scene.swift"; sourceTree = "<group>"; };
-		7EDF7DED2BE1BDC300E63530 /* SurfaceDimensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfaceDimensions.swift; sourceTree = "<group>"; };
+		7EDF7DED2BE1BDC300E63530 /* FloorPlan+DimensionDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FloorPlan+DimensionDetector.swift"; sourceTree = "<group>"; };
 		A23A755945767DCC32DA1B96 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		BDCDF999C0FBF74170DC5369 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		CF917C4429C97BA800F8BBDB /* RoomPlanMultiscanMerging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoomPlanMultiscanMerging.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +115,7 @@
 				7EDF7DE82BE1BDC300E63530 /* FloorPlan+Object.swift */,
 				7E3875D12BF4670900759BE1 /* FloorPlan+Pillar.swift */,
 				7E3876022BF498AF00759BE1 /* FloorPlan+PillarDetector.swift */,
+				7EDF7DE52BE1BDC300E63530 /* FloorPlan+Dimension.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -143,10 +144,9 @@
 				7E3875D52BF469BB00759BE1 /* Extensions */,
 				7E3875CE2BF4666300759BE1 /* Objects */,
 				7E02CF232BF336EA00FEA5CB /* Surfaces */,
-				7EDF7DE52BE1BDC300E63530 /* FloorPlan+Dimension.swift */,
 				7EDF7DE92BE1BDC300E63530 /* FloorPlan+Preference.swift */,
 				7EDF7DEA2BE1BDC300E63530 /* FloorPlan+Scene.swift */,
-				7EDF7DED2BE1BDC300E63530 /* SurfaceDimensions.swift */,
+				7EDF7DED2BE1BDC300E63530 /* FloorPlan+DimensionDetector.swift */,
 				7E02CF1F2BF3330E00FEA5CB /* FloorPlan.swift */,
 				7E3875D32BF467D100759BE1 /* FloorPlanNodeProtocol.swift */,
 				7E3875D82BF47E9400759BE1 /* FloorPlan+Module.swift */,
@@ -287,7 +287,7 @@
 				7E3876032BF498AF00759BE1 /* FloorPlan+PillarDetector.swift in Sources */,
 				CF917C4829C97BA800F8BBDB /* AppDelegate.swift in Sources */,
 				7E3875D22BF4670900759BE1 /* FloorPlan+Pillar.swift in Sources */,
-				7EDF7DF82BE1BDC300E63530 /* SurfaceDimensions.swift in Sources */,
+				7EDF7DF82BE1BDC300E63530 /* FloorPlan+DimensionDetector.swift in Sources */,
 				7E3875D42BF467D100759BE1 /* FloorPlanNodeProtocol.swift in Sources */,
 				7E02CF252BF336F600FEA5CB /* FloorPlan+Wall.swift in Sources */,
 				7ED5FC052BD87EC9009731D0 /* simd_float4x4+EulerAnglesAndPosition.swift in Sources */,

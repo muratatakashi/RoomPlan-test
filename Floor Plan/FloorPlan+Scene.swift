@@ -29,8 +29,7 @@ extension FloorPlan {
         private var _rootNode: SKNode = SKNode()
         
         private lazy var _pillarDetector = PillarDetector()
-        
-        private var _surfaceDimensions: SurfaceDimensions?
+        private lazy var _dimensionDetector = DimensionDetector()
        
         struct CameraProperty {
             var scale: CGFloat = .init()
@@ -97,6 +96,9 @@ extension FloorPlan {
             
             // 推定柱を描画
             self.drawPillars()
+            
+            // 寸法を描画
+            self.drawDimensions()
             
             // ビューサイズ設定
             self.setupViewSize()
@@ -229,12 +231,11 @@ extension FloorPlan {
             }
         }
         
-        private func drawSurfaceDimensions() {
-            self._surfaceDimensions = SurfaceDimensions(
-                scene: self,
-                root: self._rootNode
-            )
-            self._surfaceDimensions?.draw()
+        private func drawDimensions() {
+            self._dimensionDetector.load(root: self._rootNode, pillars: self._pillarDetector.pillars)
+            self._dimensionDetector.dimensions.forEach {
+                self._rootNode.addChild($0)
+            }
         }
         
         private func drawObjects() {
