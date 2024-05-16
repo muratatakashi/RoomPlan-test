@@ -66,20 +66,25 @@ extension FloorPlan {
             end.strokeColor = Preference.shared.dimensionColor
             
             let center = (self.start + self.end) / 2
-            let length = Int((self.end - self.start).length())
+            let length = Int(round((self.end - self.start).length()))
+            
+            let labelAnchor = SKNode()
+            labelAnchor.position = center
+            labelAnchor.zRotation = self.start.angle(to: self.end)
+
             let label = SKLabelNode(fontNamed: Preference.shared.fontName)
             label.text = length.description
-            label.color = Preference.shared.fontColor
+            label.fontColor = Preference.shared.fontColor
             label.fontSize = Preference.shared.fontSize
-            label.position = center
-            label.zRotation = self.start.angle(to: self.end)
+            label.position = CGPoint(x: 0, y: 50)
+            labelAnchor.addChild(label)
 
             self.zPosition = self.priority
             
             self.addChild(shape)
             self.addChild(start)
             self.addChild(end)
-            self.addChild(label)
+            self.addChild(labelAnchor)
         }
     }
 

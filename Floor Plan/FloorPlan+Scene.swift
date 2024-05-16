@@ -202,16 +202,6 @@ extension FloorPlan {
                     height: targetFrame.height * scale
                 )
             }
-            
-            let center = targetFrame.origin
-            let label = SKLabelNode(fontNamed: Preference.shared.fontName)
-            label.text = "hello world"
-            label.color = .red//Preference.shared.fontColor
-            label.fontSize = 1000//Preference.shared.fontSize
-            label.position = center
-            label.zPosition = 100000
-            
-            self._rootNode.addChild(label)
         }
         
         private func moveCameraToCenter() {

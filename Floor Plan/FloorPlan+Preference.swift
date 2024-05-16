@@ -52,7 +52,7 @@ extension FloorPlan {
         
         // label
         let fontColor: UIColor = .black
-        var fontSize: CGFloat { 20 * self.scalingFactor * self.deviceScale }
+        var fontSize: CGFloat { 15 * self.scalingFactor * self.deviceScale }
         let fontName: String = "HelveticaNeue-Bold"
         
         // zPositions
