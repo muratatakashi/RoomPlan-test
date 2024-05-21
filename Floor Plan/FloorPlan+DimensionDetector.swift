@@ -106,6 +106,53 @@ extension FloorPlan {
             self._dimensionMap[.right]?.sort(by: {$0.position.y < $1.position.y})
             self._dimensionMap[.top]?.sort(by: {$0.position.x < $1.position.x})
             self._dimensionMap[.bottom]?.sort(by: {$0.position.x < $1.position.x})
+            
+            let minLength: CGFloat = 300
+
+            if self._simply {
+                // ノイズは除外
+                self.filteringDimensions(minLength: minLength)
+            }
+        }
+        
+        private func filteringDimensions(minLength threshold: CGFloat) {
+            // 加減を下回る寸法は除外する
+            
+            self._dimensionMap.forEach { position, pillars in
+                guard 3 < pillars.count else { return }
+                
+                var filteredPillars = [Pillar]()
+
+                var basePillar = pillars[0]
+                filteredPillars.append(basePillar)
+
+                for i in 1..<(pillars.count-1) {
+                    let length = self.length(with: position, from: basePillar.position, to: pillars[i].position)
+                    if threshold <= length {
+                        filteredPillars.append(pillars[i])
+                        basePillar = pillars[i]
+                    }
+                }
+
+                // 終点と1個前の長さが短かったら1個前は要らない
+                if self.length(with: position, from: basePillar.position, to: pillars.last!.position) < threshold {
+                    filteredPillars.removeLast()
+                }
+                
+                // 最後は必要
+                filteredPillars.append(pillars.last!)
+
+                self._dimensionMap[position] = filteredPillars
+            }
+        }
+        
+        func length(with position: Position, from start: CGPoint, to end: CGPoint) -> CGFloat {
+            switch position {
+            case .left, .right:
+                return abs(end.y - start.y)
+            case .top, .bottom:
+                return abs(end.x - start.x)
+            }
         }
         
         private func loadDimensions(root: SKNode) {
