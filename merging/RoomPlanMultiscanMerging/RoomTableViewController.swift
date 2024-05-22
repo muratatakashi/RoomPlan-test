@@ -88,9 +88,12 @@ class RoomTableViewController: UITableViewController {
 
     /// Selects a table row and enables the Merge button for nonzero selections.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if selectedURLs()?.count != nil {
-//            enableMergeAndExportButton(enable: true)
-//        }
+        if selectedURLs()?.count != nil {
+            enableMergeAndExportButton(enable: true)
+        }
+        guard !tableView.isEditing else {
+            return
+        }
         
         let url = self.room(for: indexPath)
         let jsonURL = url.appending(path: "capturedRoom.json")
@@ -115,9 +118,9 @@ class RoomTableViewController: UITableViewController {
 
     /// Deselects a table row and disables the Merge button if there isn't a selection present.
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//        if selectedURLs()?.count == nil {
-//            enableMergeAndExportButton(enable: false)
-//        }
+        if selectedURLs()?.count == nil {
+            enableMergeAndExportButton(enable: false)
+        }
     }
 
     // MARK: - Table view data source

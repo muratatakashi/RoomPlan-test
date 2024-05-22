@@ -26,7 +26,13 @@ final class FloorPlanModel {
     func export(structure: CapturedStructure) throws {
         let exportFolderURL = try self.createTmpExportFolder()
         let meshDestinationURL = exportFolderURL.appending(path: "floorplan.usdz")
-        try self.createExportData(structure: structure, meshDestinationURL: meshDestinationURL)
+        
+        if 1 < structure.rooms.count {
+            try self.createExportData(structure: structure, meshDestinationURL: meshDestinationURL)
+        } else if let room = structure.rooms.first {
+            try self.createExportData(room: room, meshDestinationURL: meshDestinationURL)
+        }
+        
         self.sharedUrl = exportFolderURL
         self.isPresentedAcitivityView = true
     }
@@ -36,6 +42,13 @@ final class FloorPlanModel {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(capturedStructure)
+        try data.write(to: url)
+    }
+
+    private func exportJson(from capturedRoom: CapturedRoom, to url: URL) throws {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(capturedRoom)
         try data.write(to: url)
     }
 
@@ -49,6 +62,22 @@ final class FloorPlanModel {
         try exportJson(from: structure, to: roomDestinationURL)
         let metadataDestinationURL = meshDestinationURL.deletingLastPathComponent().appending(path: "floorplan.plist")
         try structure.export(
+            to: meshDestinationURL,
+            metadataURL: metadataDestinationURL,
+            exportOptions: [.mesh]
+        )
+    }    
+    
+    /// Exports the merged captured structure in JSON and USDZ formats to a URL.
+    private func createExportData(
+        room: CapturedRoom,
+        meshDestinationURL: URL?
+    ) throws {
+        guard let meshDestinationURL else { return }
+        let roomDestinationURL = meshDestinationURL.deletingLastPathComponent().appending(path: "capturedRoom.json")
+        try exportJson(from: room, to: roomDestinationURL)
+        let metadataDestinationURL = meshDestinationURL.deletingLastPathComponent().appending(path: "floorplan.plist")
+        try room.export(
             to: meshDestinationURL,
             metadataURL: metadataDestinationURL,
             exportOptions: [.mesh]

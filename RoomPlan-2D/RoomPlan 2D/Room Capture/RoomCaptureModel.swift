@@ -35,7 +35,7 @@ final class RoomCaptureModel: NSObject, RoomCaptureSessionDelegate {
     var lastSnapshot: UIImage?
     var showSnapshot: Bool = false
     
-    var canScan: Bool = false
+    var canNextScan: Bool = false
     var canSave: Bool = false
 
     private var _isFinished: Bool = false
@@ -68,7 +68,7 @@ final class RoomCaptureModel: NSObject, RoomCaptureSessionDelegate {
     }
     
     func load() {
-        self.canScan = false
+        self.canNextScan = false
         self.canSave = false
         self.loadExperience()
     }
@@ -88,7 +88,7 @@ final class RoomCaptureModel: NSObject, RoomCaptureSessionDelegate {
     
     func stopSession() {
         self._isFinished = true
-        self.canScan = false
+        self.canNextScan = false
         self.canSave = false
         roomCaptureView.captureSession.stop()
         self.saveExperience()
@@ -183,7 +183,6 @@ final class RoomCaptureModel: NSObject, RoomCaptureSessionDelegate {
     private func loadExperience() {
         guard let worldMap = self._lastWorldMap else {
             roomCaptureView.captureSession.arSession.run(self._arConfiguration)
-            self.canScan = true
             return
         }
         
@@ -285,7 +284,7 @@ extension RoomCaptureModel: ARSessionDelegate {
         case (.normal, .mapped),
             (.normal, .extending):
             message = "mapped !"
-            self.canScan = true
+            self.canNextScan = true
             
 //        case (.normal, _) where mapDataFromFile != nil && !isRelocalizingMap:
 //            message = "Move around to map the environment or tap 'Load Experience' to load a saved experience."

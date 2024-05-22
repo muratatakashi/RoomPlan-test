@@ -60,7 +60,7 @@ struct RoomCaptureScanView: View {
                         .padding(.bottom)
                     }
                     
-                    if self.model.canScan,
+                    if self.model.canNextScan,
                        !self.isScanning,
                        !self.isSaved
                     {
