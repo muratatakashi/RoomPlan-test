@@ -16,6 +16,10 @@ struct FloorPlanView: View {
         self.model.structure
     }
     
+    var scene: FloorPlan.Scene {
+        self.model.scene
+    }
+    
     var onDismiss: (()->Void)
     
     private func share() {
@@ -27,14 +31,13 @@ struct FloorPlanView: View {
     
     var body: some View {
         ZStack {
-            SpriteView(scene: FloorPlan.Scene(capturedStructure: self.structure))
+            SpriteView(scene: self.scene)
             VStack {
                 HStack {
                     Button(action: self.onDismiss) {
                         Text("閉じる")
                     }
-                    .padding(.leading)
-                    .padding(.top)
+                    .padding()
 
                     Spacer()
                     
@@ -45,7 +48,71 @@ struct FloorPlanView: View {
                     .padding(.trailing)
                     .padding(.top)
                 }
+                
                 Spacer()
+                
+                HStack {
+                    RoundedButton(
+                        text: "raw",
+                        textColor: .white,
+                        backgroundColor: .gray,
+                        fontWeight: .medium,
+                        cornerRadius: 5,
+                        width: 70,
+                        height: 32
+                    ) {
+                        self.model.reloadScene(by: .none)
+                    }
+                    
+                    RoundedButton(
+                        text: "910",
+                        textColor: .white,
+                        backgroundColor: .gray,
+                        fontWeight: .medium,
+                        cornerRadius: 5,
+                        width: 70,
+                        height: 32
+                    ) {
+                        self.model.reloadScene(by: .m910)
+                    }
+
+                    RoundedButton(
+                        text: "985",
+                        textColor: .white,
+                        backgroundColor: .gray,
+                        fontWeight: .medium,
+                        cornerRadius: 5,
+                        width: 70,
+                        height: 32
+                    ) {
+                        self.model.reloadScene(by: .m985)
+                    }
+                    
+                    RoundedButton(
+                        text: "1000",
+                        textColor: .white,
+                        backgroundColor: .gray,
+                        fontWeight: .medium,
+                        cornerRadius: 5,
+                        width: 70,
+                        height: 32
+                    ) {
+                        self.model.reloadScene(by: .m1000)
+                    }
+
+                    RoundedButton(
+                        text: "寸法",
+                        textColor: .white,
+                        backgroundColor: .gray,
+                        fontWeight: .medium,
+                        cornerRadius: 5,
+                        width: 70,
+                        height: 32
+                    ) {
+                        self.model.reloadScene(simpleDimension: !self.scene.simpleDimension)
+                    }
+                }
+                .padding()
             }
         }
         .sheet(isPresented: self.$model.isPresentedAcitivityView) {

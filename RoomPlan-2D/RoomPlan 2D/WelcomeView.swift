@@ -23,7 +23,7 @@ struct WelcomeView: View {
             Spacer()
                 .frame(height: 50)
             
-            NavigationLink("スキャン開始") {
+            NavigationLink("起動") {
                 RoomCaptureScanView()
             }
             .padding()

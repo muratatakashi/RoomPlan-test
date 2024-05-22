@@ -14,10 +14,13 @@ final class FloorPlanModel {
     var structure: CapturedStructure
     var sharedUrl: URL?
     
+    var scene: FloorPlan.Scene
+    
     var isPresentedAcitivityView: Bool = false
 
     init(structure: CapturedStructure) {
         self.structure = structure
+        self.scene = FloorPlan.Scene(capturedStructure: structure)
     }
     
     func export(structure: CapturedStructure) throws {
@@ -64,5 +67,13 @@ final class FloorPlanModel {
             withIntermediateDirectories: true
         )
         return exportFolderURL
+    }
+    
+    func reloadScene(by module: FloorPlan.Module) {
+        self.scene.reload(by: module, simpleDimension: self.scene.simpleDimension)
+    }
+    
+    func reloadScene(simpleDimension: Bool) {
+        self.scene.reload(by: self.scene.module, simpleDimension: simpleDimension)
     }
 }
