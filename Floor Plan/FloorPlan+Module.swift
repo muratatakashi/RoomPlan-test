@@ -43,8 +43,8 @@ extension FloorPlan {
             var y = CGFloat(Int(point.y))
             
             // 割って四捨五入する
-            let divX = floor(x / self.span)
-            let divY = floor(y / self.span)
+            let divX = round(x / self.span)
+            let divY = round(y / self.span)
             
             // spanの倍数にする
             x = self.span * divX
